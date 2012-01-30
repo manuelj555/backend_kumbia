@@ -23,8 +23,8 @@ class AdminController extends Controller {
                     return $this->intentos_pasados();
                 }
                 Flash::error('no posees privilegios para acceder a <b>' . Router::get('route') . '</b>');
-                View::select(NULL, 'informacion');
-                return false;
+                View::select(NULL);
+                return FALSE;
             } else {
                 $acl->resetearIntentos();
             }
