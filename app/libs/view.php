@@ -30,7 +30,6 @@ class View extends KumbiaView {
         }
         Logger::critical($e);
         Flash::info('Si el problema persiste por favor informe al administrador del sistema...!!!');
-        //View::select(NULL,'informacion');
     }
 
 }
