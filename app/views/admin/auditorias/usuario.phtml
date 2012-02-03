@@ -25,7 +25,7 @@
         <?php echo Form::select('filtro.tabla_afectada', $tablas_afectadas) ?>
     </div>
     <div class="span4">
-        <?php echo Form::date('filtro.fecha_at') ?>
+        <?php echo Form::date('filtro.fecha_at','span3') ?>
     </div>
     <div class="span4">
         <?php echo Form::text('filtro.accion_realizada') ?>
@@ -49,3 +49,7 @@
         text-align: center;
     }
 </style>
+<?php
+    Tag::css('datepicker');
+    echo Tag::js('datepicker/datepicker');
+?>
