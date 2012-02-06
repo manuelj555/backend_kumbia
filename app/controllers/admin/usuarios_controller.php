@@ -94,6 +94,7 @@ class UsuariosController extends AdminController {
                     return Router::redirect();
                 } else {
                     Flash::warning('No se Pudieron Guardar los Datos...!!!');
+                    unset($this->usuario); //para que cargue el $_POST en el form
                 }
             } else if (!$this->usuario) {
                 Flash::warning("No existe ningun usuario con id '{$id}'");

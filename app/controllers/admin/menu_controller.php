@@ -70,6 +70,7 @@ class MenuController extends AdminController {
                     return Router::redirect();
                 } else {
                     Flash::warning('No se Pudieron Guardar los Datos...!!!');
+                    unset($this->menu); //para que cargue el $_POST en el form
                 }
             }
         } catch (KumbiaException $e) {

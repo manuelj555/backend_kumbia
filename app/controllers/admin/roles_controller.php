@@ -82,6 +82,7 @@ class RolesController extends AdminController {
                     return Router::redirect();
                 } else {
                     Flash::warning('No se Pudieron Guardar los Datos...!!!');
+                    unset($this->rol); //para que cargue el $_POST en el form
                 }
             } else if (!$this->rol) {
                 Flash::warning("No existe ningun rol con id '{$id}'");

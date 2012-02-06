@@ -69,6 +69,7 @@ class RecursosController extends AdminController {
                     return Router::redirect();
                 } else {
                     Flash::warning('No se Pudieron Guardar los Datos...!!!');
+                    unset($this->recurso); //para que cargue el $_POST en el form
                 }
             }
         } catch (KumbiaException $e) {
