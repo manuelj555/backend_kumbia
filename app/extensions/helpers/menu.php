@@ -53,8 +53,8 @@ class Menu {
         $class = 'menu_' . str_replace('/', '_', $objeto_menu->url);
         if ($sub_menu) {
             $html = "<li class='{$class} dropdown {$objeto_menu->clases}'>" .
-                    Html::link($objeto_menu->url, $objeto_menu->nombre ,'class="dropdown-toggle"') . PHP_EOL;
-                    //"<a href='#' class='dropdown-toggle'>$objeto_menu->nombre</a>" . PHP_EOL;
+                    Html::link($objeto_menu->url, $objeto_menu->nombre .
+                            '<b class="caret"></b>', 'class="dropdown-toggle"') . PHP_EOL;
         } else {
             $html = "<li class='{$class} {$objeto_menu->clases}'>" .
                     Html::link($objeto_menu->url, $objeto_menu->nombre) . PHP_EOL;
