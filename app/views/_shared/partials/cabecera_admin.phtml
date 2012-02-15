@@ -1,8 +1,10 @@
-<div id='cabecera' class="topbar">
-    <div class="fill">
+<div id='cabecera' class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
         <div class="container">
-            <h3><a>Modulo de Administracion</a></h3>
-            <?php View::renderMenu() ?>
+            <a class="brand">Modulo de Administracion</a>
+            <div class="nav-collapse pull-right">
+                <?php View::renderMenu() ?>
+            </div>
             <ul class="secondary-nav" data-dropdown="true">
                 <li>
                     <a class="dropdown-toggle" href="#" style="text-transform: capitalize;">

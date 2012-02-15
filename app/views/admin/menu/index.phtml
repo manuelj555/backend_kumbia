@@ -11,7 +11,7 @@
     Table::imgLink('figuras/editar.png', 'admin/menu/editar');
     Table::imgLinkConfirm('figuras/eliminar.png', 'admin/menu/eliminar', '',
                     '¿Realmente desea Eliminar Este Menu?');
-    echo Table::create($menus, 'class="zebra-striped bordered-table"');
+    echo Table::create($menus, 'class="table table-bordered table-striped"');
     ?>
     <div class="actions">
         <?php echo Html::linkAction("crear", 'Crear Menu', 'class="btn primary"') ?>
