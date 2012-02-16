@@ -111,7 +111,7 @@
                 var capa = $('#'+div);
                 capa.html(data);
                 capa.hide();
-                capa.show('slow');
+                capa.show();
                 button.attr('disabled', null);
             });
         },
