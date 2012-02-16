@@ -31,7 +31,7 @@ class Flash {
      */
     public static function show($name, $text) {
         if (isset($_SERVER['SERVER_SOFTWARE'])) {
-            echo '<div class="', $name, ' alert" data-alert="alert">
+            echo '<div class="', $name, ' alert" data-alert="alert" data-dismiss="alert">
                 <a class="close" data-dismiss="alert"  href="#">×</a>', $text, '</div>', PHP_EOL;
         } else {
             echo $name, ': ', strip_tags($text), PHP_EOL;
