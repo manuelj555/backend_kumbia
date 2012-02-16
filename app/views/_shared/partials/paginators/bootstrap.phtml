@@ -26,7 +26,7 @@
  * @license    http://wiki.kumbiaphp.com/Licencia     New BSD License
  */
 if (!isset($url)) {
-    extract(Router::get());
+    extract(Router::get(), 0);
     $url = "$controller/$action";
     if ($module) {
         $url = "$module/$url";

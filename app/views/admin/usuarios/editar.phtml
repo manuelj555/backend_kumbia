@@ -5,18 +5,22 @@
     </h1>
 </div>
 <?php View::content() ?>
-<?php echo Form::open() ?>
+<?php echo Form::open(NULL, 'post', 'class="form-horizontal"') ?>
 <?php echo Form::hidden('usuario.id') ?>
-<div class="clearfix">
-    <label for="usuario_roles_id">Rol del Usuario* : </label>   
-    <?php echo Form::dbSelect('usuario.roles_id', 'rol') ?>
+<div class="control-group">
+    <label for="usuario_roles_id">Rol del Usuario* : </label>
+    <div class="controls">
+        <?php echo Form::dbSelect('usuario.roles_id', 'rol') ?>
+    </div>
 </div>
-<div class="clearfix">
+<div class="control-group">
     <label for="usuario_activo">Activo : </label>
-    <?php echo Form::select('usuario.activo', array('1' => 'Si', '0' => 'No')) ?>
+    <div class="controls">
+        <?php echo Form::select('usuario.activo', array('1' => 'Si', '0' => 'No')) ?>
+    </div>
 </div>
-<div class="actions">
-    <?php echo Form::submit('Guardar Datos', 'class="btn primary"') ?>
-    <?php echo Html::linkAction('','Cancelar','class="btn"') ?>
-</div>
+<div class="form-actions">
+    <?php echo Form::submit('Guardar Datos', 'class="btn btn-primary"') ?>
+    <?php echo Html::linkAction('', 'Cancelar', 'class="btn"') ?>
+    </div>
 <?php echo Form::close() ?>

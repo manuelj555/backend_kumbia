@@ -1,18 +1,18 @@
 <div class="page-header">
     <h1>Recursos por Agregar al Sistema
-        <?php echo Html::linkAction('', 'Volver', 'class="btn right"') ?>
-        <?php echo Html::linkAction('crear', 'Crear Recurso', 'class="btn info right"') ?>
+        <?php echo Html::linkAction('', 'Volver', 'class="btn pull-right"') ?>
+        <?php echo Html::linkAction('crear', 'Crear Recurso', 'class="btn btn-info pull-right"') ?>
     </h1>
 </div>
 <?php echo Form::open() ?>
         <p>
-    <?php echo Form::submit('Guardar Nuevos Recursos', 'name="guardar" class="btn primary"') ?>
+    <?php echo Form::submit('Guardar Nuevos Recursos', 'name="guardar" class="btn btn-primary"') ?>
     </p>
 <?php View::content() ?>
-        <table>
+        <table class="table table-bordered table-striped">
             <thead>
                 <tr>
-                    <th>Datos del Recurso</th>
+                    <th class="span4">Datos del Recurso</th>
                     <th>Descripci&oacute;n</th>
                     <th>Activo</th>
                     <th>Agregar</th>
@@ -38,8 +38,8 @@
                         </li>
                     </ul>
                 </td>
-                <td  class="span5">
-                <?php echo Form::textarea("descripcion.$index", 'class="xxlarge"') ?>
+                <td>
+                <?php echo Form::textarea("descripcion.$index", 'class="span6"') ?>
             </td>
             <td class="span1">
                 <?php echo Form::radio("activo.$index", '1', NULL, TRUE) ?> Si <br/>
@@ -52,7 +52,7 @@
         <?php endforeach ?>
             </tbody>
         </table>
-<?php View::partial('paginators/punbb', false, array('page' => $recursos, 'url' => Router::get('controller_path') . '/escaner')); ?>
+<?php View::partial('paginators/bootstrap', false, array('page' => $recursos, 'url' => Router::get('controller_path') . '/escaner')); ?>
 <?php echo Form::close() ?>
 <style>
     table ul strong{

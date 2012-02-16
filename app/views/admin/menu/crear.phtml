@@ -2,40 +2,54 @@
     <h1><?php eh($titulo) ?></h1>
 </div>
 <?php View::content() ?>
-<?php echo Form::open() ?>
+<?php echo Form::open(NULL, 'post', 'class="form-horizontal"') ?>
 <?php echo Form::hidden('menu.id') ?>
-<div class="clearfix">
+<div class="control-group">
     <label for="menu_menu_id">Menu Padre : </label>
-    <?php echo Form::dbSelect('menu.menus_id', 'nombre', array('menus', 'find', 'activo = "1"'), 'Ninguno') ?>
+    <div class="controls">
+        <?php echo Form::dbSelect('menu.menus_id', 'nombre', array('menus', 'find', 'activo = "1"'), 'Ninguno') ?>
+    </div>
 </div>
-<div class="clearfix">
+<div class="control-group">
     <label for="menu_recursos_id">Recurso al que Accede : </label>
-    <?php echo Form::dbSelect('menu.recursos_id', 'recurso') ?>
+    <div class="controls">
+        <?php echo Form::dbSelect('menu.recursos_id', 'recurso') ?>
+    </div>
 </div>
-<div class="clearfix">
+<div class="control-group">
     <label for="menu_nombre">Texto a Mostrar : </label>
-    <?php echo Form::text('menu.nombre') ?>
+    <div class="controls">
+        <?php echo Form::text('menu.nombre') ?>
+    </div>
 </div>
-<div class="clearfix">
+<div class="control-group">
     <label for="menu_url">Url del Menu : </label>
-    <?php echo Form::text('menu.url') ?>
+    <div class="controls">
+        <?php echo Form::text('menu.url') ?>
+    </div>
 </div>
-<div class="clearfix">
+<div class="control-group">
     <label for="menu_posicion">Posicion en el Menu : </label>
-    <?php echo Form::text('menu.posicion') ?>
+    <div class="controls">
+        <?php echo Form::text('menu.posicion') ?>
+    </div>
 </div>
-<div class="clearfix">
+<div class="control-group">
     <label for="menu_clases">Clases del Menu : </label>
-    <?php echo Form::text('menu.clases') ?>
+    <div class="controls">
+        <?php echo Form::text('menu.clases') ?>
+    </div>
 </div>
-<div class="clearfix">
+<div class="control-group">
     <label for="menu_activo">Activo (Visible) : </label>
-    <?php echo Form::select('menu.activo', array('1' => 'Si', '0' => 'No')) ?>
+    <div class="controls">
+        <?php echo Form::select('menu.activo', array('1' => 'Si', '0' => 'No')) ?>
+    </div>
 </div>
-<div class="actions">
-    <?php echo Form::submit('Guardar', 'class="btn primary"') ?>
+<div class="form-actions">
+    <?php echo Form::submit('Guardar', 'class="btn btn-primary"') ?>
     <?php echo Html::linkAction('', 'Cancelar', 'class="btn"') ?>
-</div>
+    </div>
 <?php echo Form::close() ?>
 <script type="text/javascript" >
     $(function(){

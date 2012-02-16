@@ -39,7 +39,7 @@ class Menu {
         $registros = $rL->obtener_menu_por_rol($id_rol);
         $html = '';
         if ($registros) {
-            $html .= '<ul class="nav" data-dropdown="dropdown">' . PHP_EOL;
+            $html .= '<ul class="nav">' . PHP_EOL;
             foreach ($registros as $e) {
                 $html .= self::generarItems($e);
             }
@@ -53,8 +53,9 @@ class Menu {
         $class = 'menu_' . str_replace('/', '_', $objeto_menu->url);
         if ($sub_menu) {
             $html = "<li class='{$class} dropdown {$objeto_menu->clases}'>" .
-                    Html::link($objeto_menu->url, $objeto_menu->nombre .
-                            '<b class="caret"></b>', 'class="dropdown-toggle"') . PHP_EOL;
+                    Html::link($objeto_menu->url . '#', $objeto_menu->nombre .
+                            ' <b class="caret"></b>',
+                            'class="dropdown-toggle" data-toggle="dropdown"') . PHP_EOL;
         } else {
             $html = "<li class='{$class} {$objeto_menu->clases}'>" .
                     Html::link($objeto_menu->url, $objeto_menu->nombre) . PHP_EOL;

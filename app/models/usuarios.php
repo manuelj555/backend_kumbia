@@ -63,8 +63,13 @@ class Usuarios extends ActiveRecord {
         $cols = "usuarios.*,roles.rol,COUNT(auditorias.id) as num_acciones";
         $join = "INNER JOIN roles ON roles.id = usuarios.roles_id ";
         $join .= "LEFT JOIN auditorias ON usuarios.id = auditorias.usuarios_id";
-        $group = 'usuarios.' . join(',usuarios.', $this->fields) . ',roles.rol';
-        return $this->paginate("page: $pagina", "columns: $cols", "join: $join", "group: $group");
+        $group = 'usuarios.' . join(',usuarios.', $this->fields);
+        $sql = "SELECT $cols FROM $this->source $join GROUP BY $group";
+        return $this->paginate_by_sql($sql, "page: $pagina");
+        //comentada la siguiente linea debido a que el active record lanzaba
+        //una advertencia de que el count esta devolviendo mas de 1 registro,
+        //esto es por el group by
+        //return $this->paginate("page: $pagina", "columns: $cols", "join: $join", "group: $group");
     }
 
     public function cambiar_clave($datos) {

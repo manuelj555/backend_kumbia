@@ -34,14 +34,14 @@ body{
 }
 
 .nav{
-    float: none !important;
+/*    float: none !important;*/
 }
 /*
 .nav .menu_salir{
     float: right;
 }*/
 
-.clearfix, .alert-message{
+.alert{
     margin-bottom: 7px !important;
 }
 
@@ -58,10 +58,11 @@ table tfoot th{
     padding: 20px;
 }
 
-.left{
-    float: left;
+.control-group label{
+    width: 200px !important;
+    margin-right: 10px;
 }
 
-.right{
-    float: right;
+.btn{
+    vertical-align: top;
 }

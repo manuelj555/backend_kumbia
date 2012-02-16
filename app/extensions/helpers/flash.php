@@ -31,8 +31,8 @@ class Flash {
      */
     public static function show($name, $text) {
         if (isset($_SERVER['SERVER_SOFTWARE'])) {
-            echo '<div class="', $name, ' alert-message" data-alert="alert">
-                <a class="close" href="#">×</a><p>', $text, '</p></div>', PHP_EOL;
+            echo '<div class="', $name, ' alert" data-alert="alert">
+                <a class="close" data-dismiss="alert"  href="#">×</a>', $text, '</div>', PHP_EOL;
         } else {
             echo $name, ': ', strip_tags($text), PHP_EOL;
         }
@@ -44,7 +44,7 @@ class Flash {
      * @param string $text
      */
     public static function error($text) {
-        return self::show('error', $text);
+        return self::show('alert-error', $text);
     }
 
     /**
@@ -53,7 +53,7 @@ class Flash {
      * @param string $text
      */
     public static function warning($text) {
-        return self::show('warning', $text);
+        return self::show('alert-warning', $text);
     }
 
     /**
@@ -62,7 +62,7 @@ class Flash {
      * @param string $text
      */
     public static function info($text) {
-        return self::show('info', $text);
+        return self::show('alert-info', $text);
     }
 
     /**
@@ -71,7 +71,7 @@ class Flash {
      * @param string $text
      */
     public static function valid($text) {
-        return self::show('valid success', $text);
+        return self::show('alert-valid alert-success', $text);
     }
 
     /**
@@ -82,7 +82,7 @@ class Flash {
      * @deprecated  ahora Flah::info()
      */
     public static function notice($text) {
-        return self::show('info', $text);
+        return self::show('alert-info', $text);
     }
 
     /**
@@ -93,7 +93,7 @@ class Flash {
      * @deprecated  ahora Flash::valid()
      */
     public static function success($text) {
-        return self::show('valid success', $text);
+        return self::show('alert-valid alert-success', $text);
     }
 
 }

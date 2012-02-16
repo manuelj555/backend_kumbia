@@ -1,6 +1,6 @@
 <div class="page-header">
     <h1>Recursos del Sistema
-        <?php echo Html::linkAction('escaner', 'Escanear Recursos por Agregar', 'class="btn primary right"') ?>
+        <?php echo Html::linkAction('escaner', 'Escanear Recursos por Agregar', 'class="btn btn-primary pull-right"') ?>
     </h1>
 </div>
 <?php View::content() ?>
@@ -15,6 +15,6 @@
         Table::imgLinkConfirm('figuras/eliminar.png', 'admin/recursos/eliminar', '', '¿Realmente desea Eliminar Este Recurso?');
         echo Table::create($recursos, 'class="table table-bordered table-striped"');
 ?>
-        <div class="actions">
-    <?php echo Html::linkAction("crear", 'Crear Recurso', 'class="btn primary"') ?>
+        <div class="form-actions">        
+    <?php echo Html::linkAction("crear", 'Crear Recurso', 'class="btn btn-primary"') ?>
 </div>
