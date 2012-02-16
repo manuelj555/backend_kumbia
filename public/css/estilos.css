@@ -15,22 +15,10 @@ body{
 }
 
 #form_logueo{
-    width: 300px;
+    width: 350px;
     margin: 0 auto;
     border: 1px solid #999999;
     padding-bottom: 0px;
-}
-
-#form_logueo .clearfix{
-    margin-bottom: 7px;
-}
-
-#form_logueo .submit_logueo{
-    text-align: right;
-}
-
-#form_logueo .clearfix input{
-    width: 97%;
 }
 
 .nav{
