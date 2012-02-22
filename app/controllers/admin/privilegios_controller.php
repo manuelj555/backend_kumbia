@@ -38,7 +38,7 @@ class PrivilegiosController extends AdminController {
     public function asignar_privilegios() {
         //por ahora este paso no es auditable :-s
         try {
-            if (Input::hasPost('priv')) {
+            if (Input::hasPost('priv') || Input::hasPost('privilegios_pagina')) {
                 $obj = Load::model('roles_recursos');
                 $datos = Input::post('priv');
                 $priv_pag = Input::post('privilegios_pagina');
