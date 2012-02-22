@@ -55,8 +55,12 @@ class RolesRecursos extends ActiveRecord {
      * @return boolean 
      */
     public function eliminarPorIds($ids) {
-        $ids = str_replace('"', "'", Util::encomillar($ids));
-        return $this->delete_all("id IN ($ids)");
+        if (!empty($ids)) {
+            $ids = str_replace('"', "'", Util::encomillar($ids));
+            return $this->delete_all("id IN ($ids)");
+        }else{
+            return true;
+        }
     }
 
     public function guardar($rol, $recurso) {
@@ -75,7 +79,7 @@ class RolesRecursos extends ActiveRecord {
             $this->rollback();
             return false;
         }
-        foreach ($privilegios as $e) {
+        foreach ((array) $privilegios as $e) {
             $data = explode('/', $e); //el formato es 1/4 = rol/recurso
             if (!$this->guardar($data[0], $data[1])) {
                 $this->rollback();
