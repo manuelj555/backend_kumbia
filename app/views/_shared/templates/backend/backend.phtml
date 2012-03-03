@@ -3,16 +3,16 @@
     <head>
         <meta charset='<?php echo APP_CHARSET ?>' />
         <title><?php echo Config::get('config.application.name') ?></title>
-        <?php View::partial('css') ?>
-        <?php View::partial('js') ?>
+        <?php View::partial('backend/css') ?>
+        <?php View::partial('backend/js') ?>
     </head>
     <body>
-        <?php View::partial('cabecera_admin') ?>        
+        <?php View::partial('backend/cabecera_admin') ?>
         <div class="container">
             <div id="contenido" class="content">
                 <?php View::content(); ?>
             </div>
-            <?php View::partial('pie') ?>   
+            <?php View::partial('backend/pie') ?>
         </div>
     </body>
 </html>

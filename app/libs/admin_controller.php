@@ -15,7 +15,7 @@ class AdminController extends Controller {
 
     final protected function initialize() {
         if (MyAuth::es_valido()) {
-            View::template('backend');
+            View::template('backend/backend');
             $acl = new MyAcl();
             if (!$acl->check()) {
                 if ($acl->limiteDeIntentosPasado()) {
@@ -34,11 +34,11 @@ class AdminController extends Controller {
                 return Router::route_to();
             } else {
                 Flash::warning('Datos de Acceso invalidos');
-                View::select(NULL, 'logueo');
+                View::select(NULL, 'backend/logueo');
                 return FALSE;
             }
         } else {
-            View::select(NULL, 'logueo');
+            View::select(NULL, 'backend/logueo');
             return FALSE;
         }
     }
