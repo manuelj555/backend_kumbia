@@ -11,10 +11,9 @@ require_once CORE_PATH . 'kumbia/kumbia_view.php';
 
 class View extends KumbiaView {
 
-    public static function renderMenu($modulo = 'vacio') {
+    public static function renderMenu($entorno) {
         if (MyAuth::es_valido()) {
-            echo $var = Menu::render(Auth::get('roles_id'));
-            return $var;
+            echo $var = Menu::render(Auth::get('roles_id'), $entorno);
         } else {
             return '';
         }

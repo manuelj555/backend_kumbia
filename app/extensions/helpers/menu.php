@@ -25,31 +25,42 @@
 Load::models('menus');
 
 class Menu {
+    /**
+     * Constante que define que solo va a mostrar los
+     * Items del menu para app
+     */
+    const APP = 1;
 
+    /**
+     * Constante que define que solo va a mostrar los
+     * Items del menu para el backend
+     */
+    const BACKEND = 2;
     /**
      * Id del rol del usuario logueado actualmente
      *
      * @var int 
      */
+
     protected static $_id_rol = NULL;
 
-    public static function render($id_rol) {
+    public static function render($id_rol, $entorno = self::BACKEND) {
         self::$_id_rol = $id_rol;
         $rL = new Menus();
-        $registros = $rL->obtener_menu_por_rol($id_rol);
+        $registros = $rL->obtener_menu_por_rol($id_rol, $entorno);
         $html = '';
         if ($registros) {
             $html .= '<ul class="nav">' . PHP_EOL;
             foreach ($registros as $e) {
-                $html .= self::generarItems($e);
+                $html .= self::generarItems($e, $entorno);
             }
             $html .= '</ul>' . PHP_EOL;
         }
         return $html;
     }
 
-    protected static function generarItems($objeto_menu) {
-        $sub_menu = $objeto_menu->get_sub_menus(self::$_id_rol);
+    protected static function generarItems($objeto_menu, $entorno) {
+        $sub_menu = $objeto_menu->get_sub_menus(self::$_id_rol, $entorno);
         $class = 'menu_' . str_replace('/', '_', $objeto_menu->url);
         if ($sub_menu) {
             $html = "<li class='{$class} dropdown {$objeto_menu->clases}'>" .
@@ -63,7 +74,7 @@ class Menu {
         if ($sub_menu) {
             $html .= '<ul class="dropdown-menu">' . PHP_EOL;
             foreach ($sub_menu as $e) {
-                $html .= self::generarItems($e);
+                $html .= self::generarItems($e, $entorno);
             }
             $html .= '</ul>' . PHP_EOL;
         }

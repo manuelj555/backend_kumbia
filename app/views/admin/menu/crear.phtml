@@ -41,15 +41,32 @@
     </div>
 </div>
 <div class="control-group">
+    <label for="menu_visible_en">Visible En : </label>
+    <div class="controls" style="margin-left: 210px">
+        <label class="radio" style="white-space: nowrap">
+            <?php echo Form::radio('menu.visible_en', '1') ?>
+            Solo en La Aplicación, fuera del Backend
+        </label>
+        <label class="radio">
+            <?php echo Form::radio('menu.visible_en', '2') ?>
+            Solo en El Backend
+        </label>
+        <label class="radio">
+            <?php echo Form::radio('menu.visible_en', '3') ?>
+            En cualquier parte del sistema
+        </label>
+    </div>
+</div>
+<div class="control-group">
     <label for="menu_activo">Activo (Visible) : </label>
     <div class="controls">
         <?php echo Form::select('menu.activo', array('1' => 'Si', '0' => 'No')) ?>
+        </div>
     </div>
-</div>
-<div class="form-actions">
+    <div class="form-actions">
     <?php echo Form::submit('Guardar', 'class="btn btn-primary"') ?>
     <?php echo Html::linkAction('', 'Cancelar', 'class="btn"') ?>
-    </div>
+        </div>
 <?php echo Form::close() ?>
 <script type="text/javascript" >
     $(function(){
