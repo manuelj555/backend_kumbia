@@ -106,7 +106,8 @@ CREATE TABLE menus (
     url character varying(100) NOT NULL,
     posicion integer DEFAULT 100,
     clases character varying(50),
-    activo integer DEFAULT 1 NOT NULL
+    activo integer DEFAULT 1 NOT NULL,
+    visible_en integer DEFAULT 2
 );
 
 
