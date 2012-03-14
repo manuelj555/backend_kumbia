@@ -3,8 +3,15 @@
     <head>
         <meta charset='<?php echo APP_CHARSET ?>' />
         <title><?php echo Config::get('config.application.name') ?></title>
-        <?php View::partial('backend/css') ?>
-        <?php View::partial('backend/js') ?>
+        <?php
+        Tag::css('backend/bootstrap');
+        Tag::css('backend/estilos');
+        echo Html::includeCss();
+        echo Tag::js('jquery/jquery.min');
+        echo Tag::js('jquery/jquery.kumbiaphp');
+        echo Tag::js('bootstrap/bootstrap');
+        echo Tag::js('global');
+        ?>
     </head>
     <body>
         <?php View::partial('backend/cabecera_app') ?>
