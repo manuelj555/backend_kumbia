@@ -28,6 +28,8 @@ class LectorRecursos {
     public static $_recursos;
 
     public static function obtenerRecursos() {
+        self::$_controladores = array();
+        self::$_recursos = array();
         self::escanearDir();
         self::escanearControladores();
         return self::$_recursos;
