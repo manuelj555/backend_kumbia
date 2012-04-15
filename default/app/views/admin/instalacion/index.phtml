@@ -1,0 +1,15 @@
+<div class="page-header">
+    <h1>Bienvenido al Proceso de Instalación</h1>
+</div>
+<?php View::content() ?>
+configuración de la conexion a la base de datos
+
+<?php echo Form::open() ?>
+<?php echo Form::text('database.host') ?>
+<?php echo Form::text('database.username') ?>
+<?php echo Form::text('database.password') ?>
+<?php echo Form::text('database.name') ?>
+<?php echo Form::text('database.type') ?>
+<?php echo Form::submit('Guardar') ?>
+<?php echo Form::close() ?>
+<?php var_dump($database) ?>
