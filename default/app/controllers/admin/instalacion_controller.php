@@ -8,35 +8,31 @@
 class InstalacionController extends AppController
 {
 
-    public function index()
+    public function index($index_entorno = 0)
     {
-//        View::select(NULL);
-//        try{
-//            ob_start();
-//            //var_dump(Load::model('usuarios')->find());
-//            //$r = current(Db::factory()->find('usuarios'));
-//            //var_dump($r['roles_id']);
-//            var_dump(Db::factory()->find('usuarios'));
-//            Flash::info(Db::factory()->last_sql_query());
-//            Flash::info(Db::factory()->last_sql_query());
-//            $usuarios = Load::model('usuarios');
-//            $usuarios->find();
-//            Flash::info($usuarios->db->last_sql_query());
-//
-//        } catch (KumbiaException $e){
-//            //si llegamos aqui es porque no se pudo conectar y no se ha configurado
-//            //la conección
-//            ob_clean();
-//            Flash::info('Configurar COnexion a la Bd');
-//        }
         Config::read('databases');
-        $this->database = Config::get('databases.development');
+        $this->entornos_bd = array_keys(Config::get('databases'));
+        $this->entorno = $this->entornos_bd[$index_entorno];
+        $this->database = Config::get("databases.{$this->entorno}");
 
         if (Input::hasPost('database')) {
-            Config::set('databases.development', Input::post('database'));
+            Config::set("databases.{$this->entornos_bd[Input::post('entorno')]}", Input::post('database'));
             MyConfig::save('databases');
             Flash::info('se guardó');
+        } elseif (Input::isAjax()) {
+            View::response('ajax', NULL);
         }
+    }
+
+    public function describe()
+    {
+        View::select(NULL);
+
+        Config::read('bd_scheme');
+        var_dump(Config::get('bd_scheme.usuarios'));
+        var_dump(Db::factory()->drop_table('usuarios'));
+        var_dump(Db::factory()->create_table('usuarios',Config::get('bd_scheme.usuarios')));
+        var_dump(Db::factory()->describe_table('usuarios'));
     }
 
 }
