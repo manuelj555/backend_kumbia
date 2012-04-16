@@ -1,7 +1,15 @@
-<?php View::content() ?>
-<?php echo Form::text('database.host') ?>
-<?php echo Form::text('database.username') ?>
-<?php echo Form::text('database.password') ?>
-<?php echo Form::text('database.name') ?>
-<?php echo Form::text('database.type') ?>
-<?php echo Form::submit('Guardar') ?>
+<?php if (Input::isAjax())
+    View::content() ?>
+<!--<div class="control-group">
+    <label for="config_name">Usar PDO : </label>
+    <div class="controls">
+        <?php //echo Ajax::select('pdo', array( 'Off', 'On'),'res-pdo','index') ?>
+    </div>
+</div>-->
+<div id="res-pdo">
+    <?php require 'index.sin_pdo.ajax.phtml';?>
+</div>
+<div class="form-actions">
+    <?php echo Form::submit('Guardar Configuración', 'class="btn btn-primary"') ?>
+    <?php echo Html::link('paso2','Siguiente', 'class="btn"') ?>
+</div>

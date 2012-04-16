@@ -32,7 +32,7 @@ class MyConfig
         foreach ($vars as $seccion => $datas) {
             $html .="[$seccion]" . PHP_EOL;
             foreach ($datas as $variable => $valor) {
-                $html .= "$variable = $valor" . PHP_EOL;
+                $html .= "$variable = \"$valor\"" . PHP_EOL;
             }
             $html .= PHP_EOL;
         }
