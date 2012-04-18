@@ -5,6 +5,8 @@
  *
  * @author manuel
  */
+Load::models('instalacion');
+
 class InstalacionController extends AppController
 {
 
@@ -21,18 +23,17 @@ class InstalacionController extends AppController
 
     public function index($index_entorno = 0)
     {
-        Config::read('databases');
-        $this->entornos_bd = array_keys(Config::get('databases'));
-        $this->entorno = $this->entornos_bd[$index_entorno];
-        $this->database = Config::get("databases.{$this->entorno}");
+        $inst = new Instalacion();
+        $this->entornos_bd = $inst->entornosConexion();
+        $this->entorno = $inst->entorno($index_entorno);
+        $this->database = $inst->configuracionEntorno($index_entorno);
 
         if (Input::hasPost('database')) {
-//            if (!$_POST['database']['pdo'])
-//                unset($_POST['database']['pdo']);
-            Config::set("databases.{$this->entornos_bd[Input::post('entorno')]}", Input::post('database'));
-            MyConfig::save('databases');
-            //Flash::info('se guardó');
-            Router::redirect('paso2');
+            if ($inst->guardarDatabases($_POST['entorno'], $_POST['database'])) {
+                return Router::toAction('paso2');
+            } else {
+                Flash::error('No se han podido guardar los datos de Configuración');
+            }
         } elseif (Input::isAjax()) {
             View::response('ajax', NULL);
         }
@@ -40,26 +41,16 @@ class InstalacionController extends AppController
 
     public function paso2()
     {
-        try {
-            $this->config = Configuracion::leer();
-            $this->entornos = array_keys(Config::read('databases'));
-            $this->entornos = array_combine($this->entornos, $this->entornos);
-            if (Input::hasPost('config')) {
-                foreach (Input::post('config') as $variable => $valor) {
-                    Configuracion::set($variable, $valor);
-                }
-                if (Configuracion::guardar()) {
-                    Flash::valid('La Configuración fue Actualizada Exitosamente...!!!');
-                    Acciones::add("Editó la Configuración de la aplicación", 'archivo config.ini');
-                    $this->config = Configuracion::leer();
-                    Router::redirect('paso3');
-                } else {
-                    Flash::warning('No se Pudieron guardar los Datos...!!!');
-                }
-                $this->config = Configuracion::leer();
+        $inst = new Instalacion();
+        $this->config = $inst->obtenerConfig();
+        $this->entornos = $inst->entornosConexion();
+        $this->entornos = array_combine($this->entornos, $this->entornos);
+        if (Input::hasPost('config')) {
+            if ($inst->guardarConfig(Input::post('config'))) {
+                return Router::toAction('paso3');
+            } else {
+                Flash::warning('No se Pudieron guardar los Datos...!!!');
             }
-        } catch (KumbiaException $e) {
-            View::excepcion($e);
         }
     }
 
@@ -77,40 +68,17 @@ class InstalacionController extends AppController
 
     public function paso3()
     {
-        try {
-            ob_start();
-            $con = Db::factory();
-        } catch (KumbiaException $e) {
-            ob_clean();
-            View::response('error');
-            Flash::error('No se Pudo Conectar a la Base de datos');
-            Flash::info('Verifica que el Nombre de usuario y contraseña de conexion a la BD son Correctos');
-            View::excepcion($e);
-            return;
-        }
-        $esquema = Config::read('bd_scheme');
-        $this->tablas_crear = array_keys($esquema);
-        if (Input::hasPost('tablas')) {
-            $exito = TRUE;
-            foreach (Input::post('tablas') as $key => $t) {
-                if (substr($key, 0, 5) == 'data_')
-                    continue;
-                $con->drop_table($t);
-                if ($con->create_table($t, $esquema[$t])) {
-                    if (isset($esquema["data_$t"])) {
-                        $con->query($esquema["data_$t"]['data']);
-                    }
+        $inst = new Instalacion();
+        if ($inst->verificarConexion()) {
+            $this->tablas_crear = $inst->listarTablasPorCrear();
+            if (Input::hasPost('tablas')) {
+                if ($inst->crearTablas(Input::post('tablas'))) {
+                    return Router::toAction('instalacion_finalizada');
                 } else {
-                    Flash::error("No se pudo crear la tabla <b>$t</b>");
-                    $exito = FALSE;
+                    Flash::error('No se Pudieron crear todas las Tablas...!!!');
                 }
             }
-            if ($exito)
-                Router::redirect('instalacion_finalizada');
-        }
-        $this->tablas_existentes = array();
-        foreach ((array) $con->list_tables() as $t) {
-            $this->tablas_existentes[] = $t[0];
+            $this->tablas_existentes = $inst->listarTablasExistentes();
         }
     }
 
