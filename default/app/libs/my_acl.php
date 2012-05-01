@@ -1,41 +1,41 @@
 <?php
+
 /**
-* Backend - KumbiaPHP Backend
-* PHP version 5
-* LICENSE
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU Affero General Public License as
-* published by the Free Software Foundation, either version 3 of the
-* License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* ERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU Affero General Public License for more details.
-*
-* You should have received a copy of the GNU Affero General Public License
-* along with this program. If not, see <http://www.gnu.org/licenses/>.
-*
-* @package Libs
-* @license http://www.gnu.org/licenses/agpl.txt GNU AFFERO GENERAL PUBLIC LICENSE version 3.
-* @author Manuel José Aguirre Garcia <programador.manuel@gmail.com>
-*/
+ * Backend - KumbiaPHP Backend
+ * PHP version 5
+ * LICENSE
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * ERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @package Libs
+ * @license http://www.gnu.org/licenses/agpl.txt GNU AFFERO GENERAL PUBLIC LICENSE version 3.
+ * @author Manuel José Aguirre Garcia <programador.manuel@gmail.com>
+ */
 class MyAcl {
 
     /**
+     * Objeto Acl2
      *
      * @var SimpleAcl
      */
     static protected $_acl = null;
-
     /**
      * arreglo con los templates para cada usuario
      *
      * @var array 
      */
     protected $_templates = array();
-
     /**
      * Recurso al que se esta intentando acceder
      *
@@ -45,48 +45,79 @@ class MyAcl {
 
     public function __construct() {
 
+        //cargamos la lib Acl2 con el adaptador por defecto (SimpleAcl)
         self::$_acl = Acl2::factory();
 
-        $roles = Load::model('roles')->find('activo = 1');
+        //obtenemos todos los roles del usuario actual
+        $roles = Load::model('usuarios')->find_first(Auth::get('id'))->getRoles();
 
-        $this->_establecerRoles($roles);
+        //
+        $roles_id = $this->_establecerRoles($roles);
+        self::$_acl->user(Auth::get('id'), $roles_id);
     }
 
+    /**
+     *
+     * @param <type> $roles resultado de una consulta del ActiveRecord
+     * @return array arreglo con los ids de los roles a los que pertenece el usuario actual conectado
+     */
     protected function _establecerRoles($roles) {
+        $roles_id = array();
         foreach ($roles as $e) {
-            if ($e->activo) {
-                //var_dump($e->rol);
-                self::$_acl->user($e->id, array($e->id));
-                self::$_acl->parents($e->id, explode(',', $e->padres));
-                $this->_establecerTemplate($e->id, $e->plantilla);
-                $this->_establecerRecursos($e->id, $e->getRecursos());
+            if ($e->activo) { //seguridad
+                self::$_acl->parents($e->id, explode(',', $e->padres)); //seteamos los padres del rol
+                $this->_establecerTemplate($e->id, $e->plantilla); //indicamos el template a usar para el rol
+                $this->_establecerRecursos($e->id, $e->getRecursos()); //establecemos los recursos permitidos para el rol
+                $roles_id[] = $e->id; //vamos cargando los ids de los roles en un arreglo.
             }
         }
+        return $roles_id;
     }
 
+    /**
+     * Establece los recursos a los que un rol tiene acceso
+     *
+     * @param int $rol id del rol
+     * @param array $recursos resultado de una consulta del ActiveRecord
+     */
     protected function _establecerRecursos($rol, $recursos) {
         $urls = array();
         foreach ($recursos as $e) {
-            if ($e->activo) {
+            if ($e->activo) { //seguridad, solo recursos activos
                 $urls[] = $e->recurso;
             }
         }
-        //var_dump($urls);
-        self::$_acl->allow($rol, $urls);
+        self::$_acl->allow($rol, $urls); //damos permiso al rol de acceder al arreglo de recursos
     }
 
+    /**
+     * Indica cual será el template que se le mostrará al usuario
+     *
+     * Es util cuando queremos mostrar pantallas diferentes dependiendo del user
+     *
+     * @param int $rol id del rol
+     * @param string $template nombre del template a usar para el rol
+     */
     protected function _establecerTemplate($rol, $template) {
         if (!empty($template)) {
-            $this->_templates["$rol"] = $template;
+            $this->_templates["$rol"] = $template; //establecemos el template para el rol
         }
     }
 
+    /**
+     * Verifica si el usuario conectado tiene permisos de acceso al recurso actual
+     *
+     * Por defecto trabaja con el id del usuario en sesión.
+     * Ademas hace uso del Router para obtener el recurso actual.
+     *
+     * @return boolean resultado del chequeo
+     */
     public function check() {
 
-        $usuario = Auth::get('roles_id');
+        $usuario = Auth::get('id');
         $modulo = Router::get('module');
         $controlador = Router::get('controller');
-        $accion = Router::get('action'); 
+        $accion = Router::get('action');
 
         if (isset($this->_templates["$usuario"])) {
             View::template("{$this->_templates["$usuario"]}");
@@ -95,19 +126,26 @@ class MyAcl {
             $recurso1 = "$modulo/$controlador/$accion";
             $recurso2 = "$modulo/$controlador/*";  //por si tiene acceso a todas las acciones
             $recurso3 = "$modulo/*/*";  //por si tiene acceso a todos los controladores
-            $recurso4 = "*";  //por si tiene acceso a todo el sistema
         } else {
             $recurso1 = "$controlador/$accion";
             $recurso2 = "$controlador/*"; //por si tiene acceso a todas las acciones
-            $recurso3 = "$modulo/*/*";  //por si tiene acceso a todos los controladores
-            $recurso4 = "*";  //por si tiene acceso a todo el sistema
+            $recurso3 = "*/*";  //por si tiene acceso a todos los controladores
         }
+        $recurso4 = "*";  //por si tiene acceso a todo el sistema
+
+        //si se cumple algunas de las codiciones, el user tiene permiso.
         return self::$_acl->check($recurso1, $usuario) ||
-                self::$_acl->check($recurso2, $usuario) ||
-                self::$_acl->check($recurso3, $usuario) ||
-                self::$_acl->check($recurso4, $usuario);
+        self::$_acl->check($recurso2, $usuario) ||
+        self::$_acl->check($recurso3, $usuario) ||
+        self::$_acl->check($recurso4, $usuario);
     }
 
+    /**
+     * Verifica si un usuario a excedido el numero de intentos de entrar a un
+     * recursos consecutivamente sin tener permisos.
+     *
+     * @return boolean devuelve true si se ha sobrepasado el limite de intentos
+     */
     public function limiteDeIntentosPasado() {
         if (Session::has('intentos_acceso')) {
             $intentos = Session::get('intentos_acceso') + 1;
@@ -120,8 +158,11 @@ class MyAcl {
         return false;
     }
 
+    /**
+     * Reinicia el numero de intentos de un usuario por acceder a un recurso en cero.
+     */
     public function resetearIntentos() {
         Session::set('intentos_acceso', 0);
     }
-    
+
 }

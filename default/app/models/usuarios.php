@@ -29,15 +29,16 @@ class Usuarios extends ActiveRecord {
 
     public function initialize() {
         $min_clave = Config::get('config.application.minimo_clave');
-        $this->belongs_to('roles');
+        //$this->belongs_to('roles');
         $this->has_many('auditorias');
+        $this->has_many('roles_usuarios');
+        $this->has_and_belongs_to_many('roles', 'model: roles', 'fk: roles_id', 'through: roles_usuarios', 'key: usuarios_id');
         $this->validates_presence_of('login', 'message: Debe escribir un <b>Login</b> para el Usuario');
         $this->validates_presence_of('clave', 'message: Debe escribir una <b>Contraseña</b>');
         $this->validates_length_of('clave', 50, $min_clave, "too_short: La Clave debe tener <b>Minimo {$min_clave} caracteres</b>");
         $this->validates_presence_of('clave2', 'message: Debe volver a escribir la <b>Contraseña</b>');
         $this->validates_presence_of('nombres', 'message: Debe escribir su <b>nombre completo</b>');
         $this->validates_presence_of('email', 'message: Debe escribir un <b>correo electronico</b>');
-        $this->validates_presence_of('roles_id', 'message: Debe seleccionar un <b>Rol de Usuario</b>');
     }
 
     public function before_validation_on_create() {
@@ -54,9 +55,11 @@ class Usuarios extends ActiveRecord {
     }
 
     public function obtener_usuarios($pagina = 1) {
-        $cols = "usuarios.*,roles.rol";
-        $join = "INNER JOIN roles ON roles.id = roles_id";
-        return $this->paginate("page: $pagina", "columns: $cols", "join: $join");
+//        $cols = "usuarios.*";
+//        $join = "INNER JOIN roles_usuarios ru ON ru.usuarios_id = usuarios.id";
+//        $join .= " INNER JOIN roles r ON r.id = ru.roles_id";
+//        $group = "usuarios.id";
+        return $this->paginate("page: $pagina"); //, "columns: $cols", "join: $join", "group: $group");
     }
 
     public function obtener_usuarios_con_num_acciones($pagina = 1) {
@@ -80,6 +83,61 @@ class Usuarios extends ActiveRecord {
         $this->clave = $datos['nueva_clave'];
         $this->clave2 = $datos['nueva_clave2'];
         return $this->update();
+    }
+
+    /**
+     * Guarda los datos de un usuario, y los roles que va a poseer
+     *
+     * @param array $data datos que se enviaron del form
+     * @param array $roles ids de los roles a guardar para el user
+     * @return boolean retorna TRUE si se pudieron guardar los datos con exito
+     */
+    public function guardar($data, $roles) {
+        $this->begin();
+
+        if (!$this->save($data)) {
+            return FALSE;
+        }
+
+        $rolUser = Load::model('roles_usuarios');
+
+        if (is_array($roles) && count($roles)) {
+
+            if (!$rolUser->delete_all("usuarios_id = '$this->id'")) {
+                Flash::error('No se pudieron Guardar los Roles para el usuario');
+                $this->rollback();
+                return FALSE;
+            }
+
+            foreach ($roles as $e) {
+                $rolUser->usuarios_id = $this->id;
+                $rolUser->roles_id = $e;
+                if (!$rolUser->create()) {
+                    Flash::error('No se pudieron Guardar los Roles para el usuario');
+                    $this->rollback();
+                    return FALSE;
+                }
+            }
+        } else {
+            Flash::error('Debe seleccionar al menos un Rol para el Usuario');
+            $this->rollback();
+            return FALSE;
+        }
+
+        $this->commit();
+        return TRUE;
+    }
+
+    public function rolesUserIds() {
+        $roles_id = array();
+        if ($this->roles_usuarios) {
+            foreach ($this->roles_usuarios as $e) {
+                $roles_id["$e->roles_id"] = $e->roles_id;
+            }
+        } else {
+            Flash::warning('Hay algo extraño, este user no tiene roles asignados aun...!!!');
+        }
+        return $roles_id;
     }
 
 }

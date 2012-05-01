@@ -1,32 +1,33 @@
 <?php
+
 /**
-* Backend - KumbiaPHP Backend
-* PHP version 5
-* LICENSE
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU Affero General Public License as
-* published by the Free Software Foundation, either version 3 of the
-* License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* ERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU Affero General Public License for more details.
-*
-* You should have received a copy of the GNU Affero General Public License
-* along with this program. If not, see <http://www.gnu.org/licenses/>.
-*
-* @package Controller
-* @license http://www.gnu.org/licenses/agpl.txt GNU AFFERO GENERAL PUBLIC LICENSE version 3.
-* @author Manuel José Aguirre Garcia <programador.manuel@gmail.com>
-*/
+ * Backend - KumbiaPHP Backend
+ * PHP version 5
+ * LICENSE
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * ERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @package Controller
+ * @license http://www.gnu.org/licenses/agpl.txt GNU AFFERO GENERAL PUBLIC LICENSE version 3.
+ * @author Manuel José Aguirre Garcia <programador.manuel@gmail.com>
+ */
 Load::models('usuarios');
 
 class UsuariosController extends AdminController {
-    
+
     protected function before_filter() {
-        if ( Input::isAjax() ){
+        if (Input::isAjax()) {
             View::select(NULL, NULL);
         }
     }
@@ -62,9 +63,12 @@ class UsuariosController extends AdminController {
 
     public function crear() {
         try {
-             if (Input::hasPost('usuario')) {
-                $usr = new Usuarios(Input::post('usuario'));
-                if ($usr->save()) {
+
+            $this->roles = Load::model('roles')->find_all_by_activo(1);
+
+            if (Input::hasPost('usuario')) {
+                $usr = new Usuarios(Input::post('usuario'));//esto es para tener atributos que no son campos de la tabla
+                if ($usr->guardar(Input::post('usuario'), Input::post('rolesUser'))) {
                     Flash::valid('El Usuario Ha Sido Agregado Exitosamente...!!!');
                     Acciones::add("Agregó al usuario {$usr->login} al sistema", 'usuarios');
                     return Router::redirect();
@@ -86,15 +90,18 @@ class UsuariosController extends AdminController {
 
             $this->usuario = $usr->find_first($id);
 
+            $this->rolesUser = $usr->rolesUserIds();
+
+            $this->roles = Load::model('roles')->find_all_by_activo(1);
+
             if (Input::hasPost('usuario')) {
 
-                if ($usr->update(Input::post('usuario'))) {
+                if ($usr->guardar(Input::post('usuario'), Input::post('rolesUser'))) {
                     Flash::valid('El Usuario Ha Sido Actualizado Exitosamente...!!!');
                     Acciones::add("Editó al usuario {$usr->login}", 'usuarios');
                     return Router::redirect();
                 } else {
                     Flash::warning('No se Pudieron Guardar los Datos...!!!');
-                    unset($this->usuario); //para que cargue el $_POST en el form
                 }
             } else if (!$this->usuario) {
                 Flash::warning("No existe ningun usuario con id '{$id}'");
@@ -109,9 +116,9 @@ class UsuariosController extends AdminController {
         try {
             $id = Filter::get($id, 'digits');
             $usuario = new Usuarios();
-            if (!$usuario->find_first($id)){ //si no existe el usuario
+            if (!$usuario->find_first($id)) { //si no existe el usuario
                 Flash::warning("No existe ningun usuario con id '{$id}'");
-            }else if ($usuario->activar()) {
+            } else if ($usuario->activar()) {
                 Flash::valid("La Cuenta del Usuario {$usuario->login} ({$usuario->nombres}) fué activada...!!!");
                 Acciones::add("Colocó al usuario {$usuario->login} como activo", 'usuarios');
             } else {
@@ -127,9 +134,9 @@ class UsuariosController extends AdminController {
         try {
             $id = Filter::get($id, 'digits');
             $usuario = new Usuarios();
-            if (!$usuario->find_first($id)){ //si no existe el usuario
+            if (!$usuario->find_first($id)) { //si no existe el usuario
                 Flash::warning("No existe ningun usuario con id '{$id}'");
-            }else if ($usuario->desactivar()) {
+            } else if ($usuario->desactivar()) {
                 Flash::valid("La Cuenta del Usuario {$usuario->login} ({$usuario->nombres}) fué desactivada...!!!");
                 Acciones::add("Colocó al usuario {$usuario->login} como inactivo", 'usuarios');
             } else {

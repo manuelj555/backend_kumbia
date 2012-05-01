@@ -8,9 +8,14 @@
 <?php echo Form::open(NULL, 'post', 'class="form-horizontal"') ?>
 <?php echo Form::hidden('usuario.id') ?>
 <div class="control-group">
-    <label for="usuario_roles_id">Rol del Usuario* : </label>
+    <label for="usuario_roles_id">Roles del Usuario* : </label><br/><br/>
     <div class="controls">
-        <?php echo Form::dbSelect('usuario.roles_id', 'rol') ?>
+        <?php //echo Form::dbSelect('usuario.roles_id', 'rol','') ?>
+        <ul>
+        <?php foreach($roles as $e): ?>
+            <li><?php echo Form::check("rolesUser.$e->id", $e->id), ' ', h($e->rol) ?></li>
+        <?php endforeach; ?>
+        </ul>
     </div>
 </div>
 <div class="control-group">
