@@ -54,3 +54,14 @@ table tfoot th{
 .btn{
     vertical-align: baseline;
 }
+
+ul.bienvenida li{
+    margin-bottom: 10px;
+    list-style: none;
+}
+
+ul.bienvenida li img{
+    vertical-align: middle;
+    margin-right: 10px;
+    width: 40px;
+}

@@ -102,10 +102,8 @@ class Instalacion
             ob_clean();
         } catch (KumbiaException $e) {
             ob_clean();
-            View::response('error');
-            Flash::error('No se Pudo Conectar a la Base de datos');
-            Flash::info('Verifica que el Nombre de usuario y contraseña de conexion a la BD son Correctos');
-            View::excepcion($e);
+            Flash::info('No se Pudo Conectar a la Base de datos');
+            Flash::error($e->getMessage());
             return FALSE;
         }
         return TRUE;
