@@ -19,10 +19,6 @@ function getEsquema()
                 'not_null' => TRUE,
                 'unique_index' => TRUE,
             ),
-            'padres' => array(
-                'type' => $db::TYPE_VARCHAR,
-                'size' => 200,
-            ),
             'plantilla' => array(
                 'type' => $db::TYPE_VARCHAR,
                 'size' => 50,
@@ -90,10 +86,6 @@ function getEsquema()
                 'auto' => TRUE,
                 'not_null' => TRUE,
             ),
-            'roles_id' => array(
-                'type' => $db::TYPE_INTEGER,
-                'not_null' => TRUE,
-            ),
             'login' => array(
                 'type' => $db::TYPE_VARCHAR,
                 'size' => 50,
@@ -120,6 +112,22 @@ function getEsquema()
                 'not_null' => TRUE,
                 'extra' => "DEFAULT '1'",
             ),
+        ),
+        'roles_usuarios' => array(
+            'id' => array(
+                'type' => $db::TYPE_INTEGER,
+                'primary' => TRUE,
+                'auto' => TRUE,
+                'not_null' => TRUE,
+            ),
+            'roles_id' => array(
+                'type' => $db::TYPE_INTEGER,
+                'not_null' => TRUE,
+            ),
+            'usuarios_id' => array(
+                'type' => $db::TYPE_INTEGER,
+                'not_null' => TRUE,
+            )
         ),
         'menus' => array(
             'id' => array(
@@ -195,10 +203,10 @@ function getEsquema()
 function getDataTable($tabla)
 {
     $datas = array(
-        'roles' => "INSERT INTO roles (id, rol, padres, plantilla, activo) VALUES
-                    (1, 'usuario comun', NULL, NULL, '1'),
-                    (2, 'usuario administrador', '1', NULL, '1'),
-                    (4, 'administrador del sistema', '1,2', NULL, '1')",
+        'roles' => "INSERT INTO roles (id, rol, plantilla, activo) VALUES
+                    (1, 'usuario comun',  NULL, '1'),
+                    (2, 'usuario administrador', NULL, '1'),
+                    (4, 'administrador del sistema', NULL, '1')",
         'recursos' => "INSERT INTO recursos (id, modulo, controlador, accion, recurso, descripcion, activo) VALUES
                     (1, 'admin', 'usuarios', NULL, 'admin/usuarios/*', 'modulo para la administracion de los usuarios del sistema', '1'),
                     (2, 'admin', 'roles', NULL, 'admin/roles/*', 'modulo para la gestion de los roles de la aplicacion\r\n', '1'),
@@ -211,9 +219,13 @@ function getDataTable($tabla)
                     (17, 'admin', 'usuarios', 'index', 'admin/usuarios/index', 'modulo para listar los usuarios del sistema, lo usará¡ el menu administracion', '1'),
                     (18, 'admin', 'auditorias', NULL, 'admin/auditorias/*', 'Modulo para revisar las acciones que los usuarios han realizado en el sistema', '1'),
                     (19, NULL, 'index', 'index', 'index/index', 'recurso que no necesita permisos, es solo de prueba :-)', '1')",
-        'usuarios' => "INSERT INTO usuarios (id, login, clave, nombres, email, roles_id, activo) VALUES
-                    (2, 'usuario', '202cb962ac59075b964b07152d234b70', 'usuario del sistema', 'asd', 1, '1'),
-                    (3, 'admin', '202cb962ac59075b964b07152d234b70', 'usuario administrador del sistema', 'manuel_j555@hotmail.com', 4, '1')",
+        'usuarios' => "INSERT INTO usuarios (id, login, clave, nombres, email, activo) VALUES
+                    (2, 'usuario', '202cb962ac59075b964b07152d234b70', 'usuario del sistema', 'asd', '1'),
+                    (3, 'admin', '202cb962ac59075b964b07152d234b70', 'usuario administrador del sistema', 'manuel_j555@hotmail.com', '1')",
+        'roles_usuarios' => "INSERT INTO roles_usuarios (id, roles_id, usuarios_id) VALUES
+                    (1, 1, 2),
+                    (2, 2, 3),
+                    (3, 4, 3)",
         'roles_recursos' => "INSERT INTO roles_recursos (id, roles_id, recursos_id) VALUES
                     (636, 1, 1),
                     (633, 1, 2),

@@ -63,9 +63,9 @@ class Usuarios extends ActiveRecord {
     }
 
     public function obtener_usuarios_con_num_acciones($pagina = 1) {
-        $cols = "usuarios.*,roles.rol,COUNT(auditorias.id) as num_acciones";
-        $join = "INNER JOIN roles ON roles.id = usuarios.roles_id ";
-        $join .= "LEFT JOIN auditorias ON usuarios.id = auditorias.usuarios_id";
+        $cols = "usuarios.*,COUNT(auditorias.id) as num_acciones";
+        //$join = "INNER JOIN roles ON roles.id = usuarios.roles_id ";
+        $join = "LEFT JOIN auditorias ON usuarios.id = auditorias.usuarios_id";
         $group = 'usuarios.' . join(',usuarios.', $this->fields);
         $sql = "SELECT $cols FROM $this->source $join GROUP BY $group";
         return $this->paginate_by_sql($sql, "page: $pagina");

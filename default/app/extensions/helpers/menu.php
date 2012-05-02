@@ -36,18 +36,18 @@ class Menu {
      * Items del menu para el backend
      */
     const BACKEND = 2;
+
     /**
-     * Id del rol del usuario logueado actualmente
+     * Id del usuario logueado actualmente
      *
      * @var int 
      */
+    protected static $_id_user = NULL;
 
-    protected static $_id_rol = NULL;
-
-    public static function render($id_rol, $entorno = self::BACKEND) {
-        self::$_id_rol = $id_rol;
+    public static function render($id_user, $entorno = self::BACKEND) {
+        self::$_id_user = $id_user;
         $rL = new Menus();
-        $registros = $rL->obtener_menu_por_rol($id_rol, $entorno);
+        $registros = $rL->obtener_menu_por_usuario($id_user, $entorno);
         $html = '';
         if ($registros) {
             $html .= '<ul class="nav">' . PHP_EOL;
@@ -60,7 +60,7 @@ class Menu {
     }
 
     protected static function generarItems($objeto_menu, $entorno) {
-        $sub_menu = $objeto_menu->get_sub_menus(self::$_id_rol, $entorno);
+        $sub_menu = $objeto_menu->get_sub_menus(self::$_id_user, $entorno);
         $class = 'menu_' . str_replace('/', '_', $objeto_menu->url);
         if ($sub_menu) {
             $html = "<li class='{$class} dropdown {$objeto_menu->clases}'>" .

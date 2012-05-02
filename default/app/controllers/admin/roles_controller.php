@@ -41,7 +41,7 @@ class RolesController extends AdminController {
             if (Input::hasPost('rol')) {
                 $rol = new Roles(Input::post('rol'));
                 if (Input::hasPost('roles_padres')) {
-                    $rol->padres = join(',', Input::post('roles_padres'));
+                    //$rol->padres = join(',', Input::post('roles_padres'));
                 }
                 if ($rol->save()) {
                     Flash::valid('El Rol Ha Sido Agregado Exitosamente...!!!');
@@ -71,9 +71,9 @@ class RolesController extends AdminController {
             if (Input::hasPost('rol')) {
 
                 if (Input::hasPost('roles_padres')) {
-                    $padres = Input::post('roles_padres');
-                    sort($padres);
-                    $rol->padres = join(',', $padres);
+//                    $padres = Input::post('roles_padres');
+//                    sort($padres);
+//                    $rol->padres = join(',', $padres);
                 }
 
                 if ($rol->update(Input::post('rol'))) {
@@ -82,7 +82,6 @@ class RolesController extends AdminController {
                     return Router::redirect();
                 } else {
                     Flash::warning('No se Pudieron Guardar los Datos...!!!');
-                    unset($this->rol); //para que cargue el $_POST en el form
                 }
             } else if (!$this->rol) {
                 Flash::warning("No existe ningun rol con id '{$id}'");

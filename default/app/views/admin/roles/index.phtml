@@ -3,8 +3,8 @@
 </div>
 <?php View::content() ?>
 <?php
-Table::headers('id', 'Rol', 'Roles de los que hereda privilegios', 'plantilla a usar', 'Estado', 'Editar', 'Eliminar');
-Table::fields('id', 'rol', 'padres', 'plantilla');
+Table::headers('id', 'Rol', 'plantilla a usar', 'Estado', 'Editar', 'Eliminar');
+Table::fields('id', 'rol', 'plantilla');
 Table::imgLink('figuras/circulo_verde.png|figuras/circulo_rojo.png', 'admin/roles/desactivar|admin/roles/activar', '', 'activo');
 Table::imgLink('figuras/editar.png', 'admin/roles/editar');
 Table::imgLinkConfirm('figuras/eliminar.png', 'admin/roles/eliminar', '', '¿Realmente desea Eliminar Este Rol?');
