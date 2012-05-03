@@ -38,16 +38,23 @@
 <?php echo Form::close() ?>
 <div id="scaffold">
     <?php
-    Table::headers('Accion Realizada', 'Fecha y Hora', 'Tabla Afectada');
-    Table::fields('accion_realizada', 'fecha_at', 'tabla_afectada');
+    Table::headers('Accion Realizada', 'Fecha y Hora', 'Tabla Afectada','IP Usuario');
+    Table::fields('accion_realizada', 'fecha_at', 'tabla_afectada','ip');
     Table::url($url);
     echo Table::create($auditorias, 'class="table table-bordered table-striped"');
     ?>
 </div>
-<style>
+<style type="text/css" >
     .span4 label{
         text-align: center;
     }
+
+    table thead th:first-child,
+    table tbody td:first-child{
+        word-wrap: break-word;
+        max-width: 500px;
+        overflow: hidden;
+}
 </style>
 <?php
     Tag::css('datepicker');

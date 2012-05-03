@@ -57,7 +57,9 @@ class RolesRecursos extends ActiveRecord {
     public function eliminarPorIds($ids) {
         if (!empty($ids)) {
             $ids = str_replace('"', "'", Util::encomillar($ids));
-            return $this->delete_all("id IN ($ids)");
+            $res = $this->delete_all("id IN ($ids)");
+            $this->log();
+            return $res;
         }else{
             return true;
         }
@@ -66,6 +68,7 @@ class RolesRecursos extends ActiveRecord {
     public function guardar($rol, $recurso) {
         if ($this->existe($rol, $recurso))
             return true;
+        
         return $this->create(array(
             'roles_id' => $rol,
             'recursos_id' => $recurso

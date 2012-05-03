@@ -41,7 +41,11 @@ class ActiveRecord extends KumbiaActiveRecord {
         if ($this->source != 'auditorias') { //mucho ojo con esto
             //solo debemos hacer el log si la tabla no es la de auditorias;
             $tabla = $this->schema ? "$this->schema.$this->source" : $this->source;
-            Acciones::add($this->db->last_sql_query(), $tabla);
+            $sql = $this->db->last_sql_query();
+            if (strpos($sql, 'SELECT ') > 10 || strpos($sql, 'SELECT ') === false) {
+                //las consultas SELECT no las vamos a guardar
+                Acciones::add($this->db->last_sql_query(), $tabla);
+            }
         }
     }
 
