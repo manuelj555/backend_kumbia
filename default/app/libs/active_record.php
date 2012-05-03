@@ -29,24 +29,20 @@ class ActiveRecord extends KumbiaActiveRecord {
         return $this->update();
     }
 
-    /**
-     * Elimina caracteres que podrian ayudar a ejecutar
-     * un ataque de Inyeccion SQL
-     *
-     * Copia de la funcion en KumbiaActiveRecord pero esta no quita los
-     * espacios en blanco, para poder crear alias en postgres
-     *
-     * @param string $sql_item
-     */
-    public static function sql_sanizite($sql_item) {
-        $sql_item = trim($sql_item);
-        if ($sql_item !== '' && $sql_item !== null) {
-            $sql_match = preg_replace('/\s+/', '', $sql_item);
-            if (!preg_match('/^[a-zA-Z_0-9\,\(\)\.\*]+$/', $sql_match)) {
-                throw new KumbiaException("Se esta tratando de ejecutar una operacion maliciosa!");
-            }
+    protected function after_save() {
+        $this->log();
+    }
+
+    protected function after_delete() {
+        $this->log();
+    }
+
+    protected function log() {
+        if ($this->source != 'auditorias') { //mucho ojo con esto
+            //solo debemos hacer el log si la tabla no es la de auditorias;
+            $tabla = $this->schema ? "$this->schema.$this->source" : $this->source;
+            Acciones::add($this->db->last_sql_query(), $tabla);
         }
-        return $sql_item;
     }
 
 }

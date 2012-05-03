@@ -42,7 +42,6 @@ class MenuController extends AdminController {
 
                 if ($menu->save()) {
                     Flash::valid('El Menu fué agregado Exitosamente...!!!');
-                    Acciones::add("Agregó el Menú {$menu->nombre} al sistema", 'menu');
                     return Router::redirect();
                 } else {
                     Flash::warning('No se Pudieron Guardar los Datos...!!!');
@@ -66,7 +65,6 @@ class MenuController extends AdminController {
 
                 if ($menu->update(Input::post('menu'))) {
                     Flash::valid('El Menu fué actualizado Exitosamente...!!!');
-                    Acciones::add("Editó el Menú {$menu->nombre}", 'menu');
                     return Router::redirect();
                 } else {
                     Flash::warning('No se Pudieron Guardar los Datos...!!!');
@@ -84,7 +82,6 @@ class MenuController extends AdminController {
             $menu->find_first($id);
             if ($menu->activar()) {
                 Flash::valid("El menu <b>{$menu->nombre}</b> Esta ahora <b>Activo</b>...!!!");
-                Acciones::add("Colocó al Menu {$menu->nombre} como activo", 'menu');
             } else {
                 Flash::warning("No se Pudo Activar el menu <b>{$menu->nombre}</b>...!!!");
             }
@@ -100,7 +97,6 @@ class MenuController extends AdminController {
             $menu->find_first($id);
             if ($menu->desactivar()) {
                 Flash::valid("El menu <b>{$menu->nombre}</b> Esta ahora <b>Inactivo</b>...!!!");
-                Acciones::add("Colocó al Menu {$menu->nombre} como inactivo", 'menu');
             } else {
                 Flash::warning("No se Pudo Desactivar el menu <b>{$menu->menu}</b>...!!!");
             }
@@ -116,7 +112,6 @@ class MenuController extends AdminController {
             $menu->find_first($id);
             if ($menu->delete()) {
                 Flash::valid("El Menu <b>{$menu->nombre}</b> fué Eliminado...!!!");
-                Acciones::add("Eliminó al Menu {$menu->nombre} del sistema", 'menu');
             } else {
                 Flash::warning("No se Pudo Eliminar el Menu <b>{$menu->nombre}</b>...!!!");
             }

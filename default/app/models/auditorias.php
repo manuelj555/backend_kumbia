@@ -66,5 +66,10 @@ class Auditorias extends ActiveRecord {
         return $tablas;
     }
 
+    protected function log(){
+        //proteccion, para que no se ejecute el log recursivamente :-s
+        return NULL;
+    }
+
 }
 

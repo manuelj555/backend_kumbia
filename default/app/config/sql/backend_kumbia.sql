@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 02-05-2012 a las 01:10:47
+-- Tiempo de generación: 03-05-2012 a las 00:53:29
 -- Versión del servidor: 5.5.8
 -- Versión de PHP: 5.3.5
 
@@ -31,6 +31,7 @@ CREATE TABLE IF NOT EXISTS `auditorias` (
   `fecha_at` date NOT NULL,
   `accion_realizada` text NOT NULL,
   `tabla_afectada` varchar(150) DEFAULT NULL,
+  `ip` varchar(30) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 

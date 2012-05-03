@@ -70,7 +70,6 @@ class UsuariosController extends AdminController {
                 $usr = new Usuarios(Input::post('usuario'));//esto es para tener atributos que no son campos de la tabla
                 if ($usr->guardar(Input::post('usuario'), Input::post('rolesUser'))) {
                     Flash::valid('El Usuario Ha Sido Agregado Exitosamente...!!!');
-                    Acciones::add("Agregó al usuario {$usr->login} al sistema", 'usuarios');
                     return Router::redirect();
                 } else {
                     Flash::warning('No se Pudieron Guardar los Datos...!!!');
@@ -98,7 +97,6 @@ class UsuariosController extends AdminController {
 
                 if ($usr->guardar(Input::post('usuario'), Input::post('rolesUser'))) {
                     Flash::valid('El Usuario Ha Sido Actualizado Exitosamente...!!!');
-                    Acciones::add("Editó al usuario {$usr->login}", 'usuarios');
                     return Router::redirect();
                 } else {
                     Flash::warning('No se Pudieron Guardar los Datos...!!!');
@@ -120,7 +118,6 @@ class UsuariosController extends AdminController {
                 Flash::warning("No existe ningun usuario con id '{$id}'");
             } else if ($usuario->activar()) {
                 Flash::valid("La Cuenta del Usuario {$usuario->login} ({$usuario->nombres}) fué activada...!!!");
-                Acciones::add("Colocó al usuario {$usuario->login} como activo", 'usuarios');
             } else {
                 Flash::warning('No se Pudo Activar la cuenta del Usuario...!!!');
             }
@@ -138,7 +135,6 @@ class UsuariosController extends AdminController {
                 Flash::warning("No existe ningun usuario con id '{$id}'");
             } else if ($usuario->desactivar()) {
                 Flash::valid("La Cuenta del Usuario {$usuario->login} ({$usuario->nombres}) fué desactivada...!!!");
-                Acciones::add("Colocó al usuario {$usuario->login} como inactivo", 'usuarios');
             } else {
                 Flash::warning('No se Pudo Desactivar la cuenta del Usuario...!!!');
             }

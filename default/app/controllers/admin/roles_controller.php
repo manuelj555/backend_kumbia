@@ -45,7 +45,6 @@ class RolesController extends AdminController {
                 }
                 if ($rol->save()) {
                     Flash::valid('El Rol Ha Sido Agregado Exitosamente...!!!');
-                    Acciones::add("Agregó el Rol {$rol->rol} al sistema", 'roles');
                     return Router::redirect();
                 } else {
                     Flash::warning('No se Pudieron Guardar los Datos...!!!');
@@ -78,7 +77,6 @@ class RolesController extends AdminController {
 
                 if ($rol->update(Input::post('rol'))) {
                     Flash::valid('El Rol Ha Sido Actualizado Exitosamente...!!!');
-                    Acciones::add("Editó el Rol {$rol->rol}", 'roles');
                     return Router::redirect();
                 } else {
                     Flash::warning('No se Pudieron Guardar los Datos...!!!');
@@ -115,7 +113,6 @@ class RolesController extends AdminController {
                 Flash::warning("No existe ningun rol con id '{$id}'");
             } else if ($rol->delete()) {
                 Flash::valid("El rol <b>{$rol->rol}</b> fué Eliminado...!!!");
-                Acciones::add("Eliminó el Rol {$rol->rol} del sistema", 'roles');
             } else {
                 Flash::warning("No se Pudo Eliminar el Rol <b>{$rol->rol}</b>...!!!");
             }
@@ -135,7 +132,6 @@ class RolesController extends AdminController {
                 Flash::warning("No existe ningun rol con id '{$id}'");
             } else if ($rol->activar()) {
                 Flash::valid("El rol <b>{$rol->rol}</b> Esta ahora <b>Activo</b>...!!!");
-                Acciones::add("Colocó al Rol {$rol->rol} como activo", 'roles');
             } else {
                 Flash::warning("No se Pudo Activar el Rol <b>{$rol->rol}</b>...!!!");
             }
@@ -155,7 +151,6 @@ class RolesController extends AdminController {
                 Flash::warning("No existe ningun rol con id '{$id}'");
             } else if ($rol->desactivar()) {
                 Flash::valid("El rol <b>{$rol->rol}</b> Esta ahora <b>Inactivo</b>...!!!");
-                Acciones::add("Colocó al Rol {$rol->rol} como inactivo", 'roles');
             } else {
                 Flash::warning("No se Pudo Desactivar el Rol <b>{$rol->rol}</b>...!!!");
             }

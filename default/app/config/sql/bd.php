@@ -196,6 +196,10 @@ function getEsquema()
                 'type' => $db::TYPE_VARCHAR,
                 'size' => 150,
             ),
+            'ip' => array(
+                'type' => $db::TYPE_VARCHAR,
+                'size' => 30,
+            ),
         ),
     );
 }

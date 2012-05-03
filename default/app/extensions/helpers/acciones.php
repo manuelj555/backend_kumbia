@@ -33,6 +33,7 @@ class Acciones {
                 $auditoria->usuarios_id = Auth::get('id');
                 $auditoria->accion_realizada = strip_tags($accion_realizada);
                 $auditoria->tabla_afectada = strtoupper(strip_tags($tabla_afectada));
+                $auditoria->ip = $_SERVER['REMOTE_ADDR'];
                 $auditoria->save();
             }
         } catch (KumbiaException $e) {
