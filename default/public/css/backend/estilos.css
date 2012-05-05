@@ -74,3 +74,9 @@ ul.bienvenida li img{
 .span-derecho .row{
     margin-left: 20px;
 }
+
+table input[type=checkbox], table img{
+    width: 20px;
+    margin-right: 10px;
+    margin-left: 20px;
+}
