@@ -90,19 +90,6 @@ class RolesController extends AdminController {
         }
     }
 
-    public function agregar_padre($id) {
-        View::template(NULL);
-        try {
-            $id = Filter::get($id, 'digits');
-
-            $roles = new Roles();
-
-            $this->rol = $roles->find_first($id);
-        } catch (KumbiaException $e) {
-            View::excepcion($e);
-        }
-    }
-
     public function eliminar($id) {
         try {
             $id = Filter::get($id, 'digits');
