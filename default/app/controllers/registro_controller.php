@@ -24,6 +24,12 @@
  */
 class RegistroController extends AppController {
 
+	public function before_filter(){
+		if (!Config::get('config.application.registro')){
+			return View::notFound();
+		}
+	}
+
     public function index() {
         if (Input::hasPost('registro')) {
             if (Load::model('usuarios', Input::post('registro'))->registrar()){
