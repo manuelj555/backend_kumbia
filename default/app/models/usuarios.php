@@ -39,6 +39,7 @@ class Usuarios extends ActiveRecord {
         $this->validates_presence_of('clave2', 'message: Debe volver a escribir la <b>Contraseña</b>');
         $this->validates_presence_of('nombres', 'message: Debe escribir su <b>nombre completo</b>');
         $this->validates_presence_of('email', 'message: Debe escribir un <b>correo electronico</b>');
+        $this->validates_email_in('email', 'message: Debe escribir un <b>correo electronico</b> válido');
     }
 
     public function before_validation_on_create() {
@@ -144,6 +145,50 @@ class Usuarios extends ActiveRecord {
         $res = Load::model('roles')->distinct('rol',
                         "join: INNER JOIN roles_usuarios ru ON ru.roles_id = roles.id AND ru.usuarios_id = '$this->id'");
         return join(', ', $res);
+    }
+
+    public function registrar() {
+        $data['activo'] = 0; //por defecto las cuentas están desactivadas
+
+        $this->begin(); //iniciamos una transaccion
+
+        if ($this->save()) {
+            $hash = md5($this->login . $this->id . $this->clave);
+            $correo = $this->email;
+            $asunto = "Tu cuenta ha sido creada con exito - " . Config::get('config.application.name');
+            $mensaje = "Felicidades tu cuenta en " . Config::get('config.application.name');
+            $mensaje .= " ha sido creada Exitosamente...!!! ";
+            $mensaje .= "<ul><li>Usuario: " . h($this->login) . "</li>";
+            $mensaje .= "<li>Contraseña: " . h($this->login) . "</li></ul>";
+            $mensaje .= "<p>Para activar tu cuenta visita el siguiente link: ";
+			
+			$headers = 'MIME-Version: 1.0' . "\r\n";
+			$headers .= 'Content-type: text/html; charset=utf8' . "\r\n";
+			$headers .= 'From: programador.manuel@gmail.com' . "\r\n";
+            $mensaje .= Html::link("registro/activar/$this->id/$hash", $hash) . "</p>";
+            if (mail($correo, $asunto, $mensaje,$headers )){
+				$this->commit();
+				return TRUE;
+			}else{
+				$this->rollback();
+				return FALSE;
+			}
+        } else {
+            $this->rollback();
+            return FALSE;
+        }
+    }
+
+    public function activarCuenta($id_usuario, $hash) {
+        if ($this->find_first((int) $id_usuario)) { //verificamos la existencia del user
+            if (md5($this->login . $this->id . $this->clave) === $hash) {
+                $this->activo = 1;
+                if ($this->save()) {
+                    return TRUE;
+                }
+            }
+        }
+        return FALSE;
     }
 
 }
