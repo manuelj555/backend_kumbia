@@ -1,0 +1,13 @@
+<?php $registros = Load::model('recursos')->find('group: modulo,controlador', 'order: modulo,controlador'); ?>
+
+<ul>
+    <?php foreach ($registros as $e): ?>
+        <li>
+        <?php eh("$e->modulo/$e->controlador/") ?> <?php echo Form::check("recurso.$e->id", $e->id) ?>
+            <br/>
+        <?php foreach ((array) $e->accionesPorControlador() as $acc): ?>
+            <?php echo $acc->accion , Form::check("recurso.$acc->id", $acc->id) ?>
+        <?php endforeach; ?>
+        </li>
+    <?php endforeach; ?>
+</ul>

@@ -95,4 +95,10 @@ class Recursos extends ActiveRecord {
         return TRUE;
     }
 
+    public function accionesPorControlador(){
+        $res = $this->find("modulo = '$this->modulo' AND controlador = '$this->controlador' AND accion != ''",
+                'columns: id,accion');
+        return $res;
+    }
+
 }

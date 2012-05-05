@@ -22,7 +22,7 @@ body{
 }
 
 .nav{
-/*    float: none !important;*/
+    /*    float: none !important;*/
 }
 /*
 .nav .menu_salir{
@@ -64,4 +64,13 @@ ul.bienvenida li img{
     vertical-align: middle;
     margin-right: 10px;
     width: 40px;
+}
+
+.span-derecho{
+    border-left: 1px solid #cccccc;
+}
+
+.span-derecho .flash,
+.span-derecho .row{
+    margin-left: 20px;
 }

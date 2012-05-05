@@ -140,4 +140,10 @@ class Usuarios extends ActiveRecord {
         return $roles_id;
     }
 
+    public function getRolesNames() {
+        $res = Load::model('roles')->distinct('rol',
+                        "join: INNER JOIN roles_usuarios ru ON ru.roles_id = roles.id AND ru.usuarios_id = '$this->id'");
+        return join(', ', $res);
+    }
+
 }
