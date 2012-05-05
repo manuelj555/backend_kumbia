@@ -38,10 +38,11 @@
 <?php echo Form::close() ?>
 <div id="scaffold">
     <?php
-    Table::headers('Accion Realizada', 'Fecha y Hora', 'Tabla Afectada','IP Usuario');
-    Table::fields('accion_realizada', 'fecha_at', 'tabla_afectada','ip');
-    Table::url($url);
-    echo Table::create($auditorias, 'class="table table-bordered table-striped"');
+    $dt = new DataTable($auditorias);
+    $dt->addHeaders('Accion Realizada', 'Fecha y Hora', 'Tabla Afectada','IP Usuario');
+    $dt->addFields('accion_realizada', 'fecha_at', 'tabla_afectada','ip');
+    $dt->url($url);
+    echo $dt->render('class="table table-bordered table-striped"');
     ?>
 </div>
 <style type="text/css" >
