@@ -86,3 +86,7 @@ table input[type=checkbox], table img{
     margin-right: 5px;
     vertical-align: top;
 }
+
+table td:first-child{
+    width: 20px;
+}

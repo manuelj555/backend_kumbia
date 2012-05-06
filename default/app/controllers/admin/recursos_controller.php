@@ -120,18 +120,28 @@ class RecursosController extends AdminController {
         return Router::redirect();
     }
 
-    public function eliminar($id) {
+    public function eliminar($id = NULL) {
         try {
             $rec = new Recursos();
 
-            $id = (int) $id;
+            if (is_int($id)) {
 
-            if (!$rec->find_first($id)) {
-                Flash::warning("No existe ningun recurso con id '{$id}'");
-            } elseif ($rec->delete()) {
-                Flash::valid("El recurso <b>{$rec->recurso}</b> ha sido Eliminado...!!!");
-            } else {
-                Flash::warning("No se Pudo Eliminar el Recurso <b>{$rec->recurso}</b>...!!!");
+                if (!$rec->find_first($id)) {
+                    Flash::warning("No existe ningun recurso con id '{$id}'");
+                } elseif ($rec->delete()) {
+                    Flash::valid("El recurso <b>{$rec->recurso}</b> ha sido Eliminado...!!!");
+                } else {
+                    Flash::warning("No se Pudo Eliminar el Recurso <b>{$rec->recurso}</b>...!!!");
+                }
+            } elseif (is_string($id)) {
+                if ($rec->delete_all("id IN ($id)")) {
+                    Flash::valid("Los Recursos <b>{$id}</b> fueron Eliminados...!!!");
+                } else {
+                    Flash::warning("No se Pudieron Eliminar los Recursos...!!!");
+                }
+            } elseif (Input::hasPost('recursos_id')) {
+                $this->ids = Input::post('recursos_id');
+                return;
             }
         } catch (KumbiaException $e) {
             View::excepcion($e);

@@ -69,7 +69,6 @@ class RolesController extends AdminController {
             $this->rol = $rol->find_first($id);
 
             if ($this->rol) {//verificamos la existencia del rol
-
                 if (Input::hasPost('rol')) {
 
                     if (Input::hasPost('roles_padres')) {
@@ -94,18 +93,28 @@ class RolesController extends AdminController {
         }
     }
 
-    public function eliminar($id) {
+    public function eliminar($id = NULL) {
         try {
-            $id = (int) $id;
-
             $rol = new Roles();
+            if (is_int($id)) {
 
-            if (!$rol->find_first($id)) { //si no existe
-                Flash::warning("No existe ningun rol con id '{$id}'");
-            } else if ($rol->delete()) {
-                Flash::valid("El rol <b>{$rol->rol}</b> fué Eliminado...!!!");
-            } else {
-                Flash::warning("No se Pudo Eliminar el Rol <b>{$rol->rol}</b>...!!!");
+
+                if (!$rol->find_first($id)) { //si no existe
+                    Flash::warning("No existe ningun rol con id '{$id}'");
+                } else if ($rol->delete()) {
+                    Flash::valid("El rol <b>{$rol->rol}</b> fué Eliminado...!!!");
+                } else {
+                    Flash::warning("No se Pudo Eliminar el Rol <b>{$rol->rol}</b>...!!!");
+                }
+            } elseif (is_string($id)) {
+                if ( $rol->delete_all("id IN ($id)") ){
+                    Flash::valid("Los Roles <b>{$id}</b> fueron Eliminados...!!!");
+                } else {
+                    Flash::warning("No se Pudieron Eliminar los Roles...!!!");
+                }
+            } elseif (Input::hasPost('roles_id')) {
+                $this->ids = Input::post('roles_id');
+                return;
             }
         } catch (KumbiaException $e) {
             View::excepcion($e);

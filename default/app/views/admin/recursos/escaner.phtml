@@ -6,7 +6,7 @@
 </div>
 <?php echo Form::open() ?>
         <p>
-    <?php echo Form::submit('Guardar Nuevos Recursos', 'name="guardar" class="btn btn-primary"') ?>
+    <?php echo Form::submit('Guardar Recursos Seleccionados', 'name="guardar" class="btn btn-primary btn-large"') ?>
     </p>
 <?php View::content() ?>
         <table class="table table-bordered table-striped">
@@ -54,7 +54,7 @@
         </table>
 <?php View::partial('paginators/bootstrap', false, array('page' => $recursos, 'url' => Router::get('controller_path') . '/escaner')); ?>
 <?php echo Form::close() ?>
-<style>
+<style type="text/css" >
     table ul strong{
         display: inline-block;
         width: 90px;

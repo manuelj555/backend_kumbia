@@ -137,13 +137,12 @@ class MenuController extends AdminController {
             } elseif (is_string($id)) {
                 $menu = new Menus();
                 if ($menu->delete_all("id IN ($id)")) {
-                    Flash::valid("Los Menús <b>{$id}</b> fuéron Eliminados...!!!");
+                    Flash::valid("Los Menús <b>{$id}</b> fueron Eliminados...!!!");
                 } else {
                     Flash::warning("No se Pudieron Eliminar los Menús...!!!");
                 }
             } elseif (Input::hasPost('menu_id')) {
                 $this->menus = Input::post('menu_id');
-                View::select('eliminar_varios');
                 return;
             }
         } catch (KumbiaException $e) {
