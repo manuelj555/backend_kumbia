@@ -46,6 +46,7 @@ class DataTable {
      * </code>
      */
     protected $_campos = array();
+
     /**
      * Url para el paginador
      *
