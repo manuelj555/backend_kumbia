@@ -148,6 +148,7 @@ class Usuarios extends ActiveRecord {
 
     public function registrar() {
         $this->activo = 0; //por defecto las cuentas están desactivadas
+        $clave = $this->clave;
 
         $this->begin(); //iniciamos una transaccion
 
@@ -157,7 +158,7 @@ class Usuarios extends ActiveRecord {
             if ($correo->enviarRegistro(array(
                         'id' => $this->id,
                         'login' => $this->login,
-                        'clave' => $this->clave,
+                        'clave' => $clave,
                         'email' => $this->email,
                         'nombres' => $this->nombres,
                         'hash' => $hash,
