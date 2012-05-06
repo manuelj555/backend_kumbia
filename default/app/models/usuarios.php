@@ -23,9 +23,10 @@
  * @author Manuel José Aguirre Garcia <programador.manuel@gmail.com>
  */
 class Usuarios extends ActiveRecord {
-
 //put your code here
 //    public $debug = true;
+
+    const ROL_DEFECTO = 1;
 
     public function initialize() {
         $min_clave = Config::get('config.application.minimo_clave');
@@ -111,9 +112,7 @@ class Usuarios extends ActiveRecord {
             }
 
             foreach ($roles as $e) {
-                $rolUser->usuarios_id = $this->id;
-                $rolUser->roles_id = $e;
-                if (!$rolUser->create()) {
+                if (!$rolUser->asignarRol($this->id, $e)) {
                     Flash::error('No se pudieron Guardar los Roles para el usuario');
                     $this->rollback();
                     return FALSE;
@@ -148,37 +147,42 @@ class Usuarios extends ActiveRecord {
     }
 
     public function registrar() {
-        $data['activo'] = 0; //por defecto las cuentas están desactivadas
+        $this->activo = 0; //por defecto las cuentas están desactivadas
 
         $this->begin(); //iniciamos una transaccion
 
-        if ($this->save()) {
+        if ($this->save() && Load::model('roles_usuarios')->asignarRol($this->id, self::ROL_DEFECTO)) {
             $hash = md5($this->login . $this->id . $this->clave);
-            $correo = $this->email;
-            $asunto = "Tu cuenta ha sido creada con exito - " . Config::get('config.application.name');
-            $mensaje = "Felicidades tu cuenta en " . Config::get('config.application.name');
-            $mensaje .= " ha sido creada Exitosamente...!!! ";
-            $mensaje .= "<ul><li>Usuario: " . h($this->login) . "</li>";
-            $mensaje .= "<li>Contraseña: " . h($this->login) . "</li></ul>";
-            $mensaje .= "<p>Para activar tu cuenta visita el siguiente link: ";
-			
-			$headers = 'MIME-Version: 1.0' . "\r\n";
-			$headers .= 'Content-type: text/html; charset=utf8' . "\r\n";
-			$headers .= 'From: programador.manuel@gmail.com' . "\r\n";
-            $mensaje .= Html::link("registro/activar/$this->id/$hash", $hash) . "</p>";
-            if (mail($correo, $asunto, $mensaje,$headers )){
-				$this->commit();
-				return TRUE;
-			}else{
-				$this->rollback();
-				return FALSE;
-			}
+            $correo = Load::model('correos');
+            if ($correo->enviarRegistro(array(
+                        'id' => $this->id,
+                        'login' => $this->login,
+                        'clave' => $this->clave,
+                        'email' => $this->email,
+                        'nombres' => $this->nombres,
+                        'hash' => $hash,
+                    ))) {
+                $this->commit();
+                return TRUE;
+            } else {
+                $this->rollback();
+                return FALSE;
+            }
         } else {
             $this->rollback();
             return FALSE;
         }
     }
 
+    /**
+     * Faltan revisar cosas acá, porque si ya un user se habia activado y
+     * algun admin lo bloquea, por el correo de gmail se puede volver a
+     * activar
+     *
+     * @param <type> $id_usuario
+     * @param <type> $hash
+     * @return <type>
+     */
     public function activarCuenta($id_usuario, $hash) {
         if ($this->find_first((int) $id_usuario)) { //verificamos la existencia del user
             if (md5($this->login . $this->id . $this->clave) === $hash) {
