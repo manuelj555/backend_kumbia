@@ -67,7 +67,7 @@ class UsuariosController extends AdminController {
             $this->roles = Load::model('roles')->find_all_by_activo(1);
 
             if (Input::hasPost('usuario')) {
-                $usr = new Usuarios(Input::post('usuario'));//esto es para tener atributos que no son campos de la tabla
+                $usr = new Usuarios(Input::post('usuario')); //esto es para tener atributos que no son campos de la tabla
                 if ($usr->guardar(Input::post('usuario'), Input::post('rolesUser'))) {
                     Flash::valid('El Usuario Ha Sido Agregado Exitosamente...!!!');
                     return Router::redirect();
@@ -83,25 +83,27 @@ class UsuariosController extends AdminController {
     public function editar($id) {
         try {
 
-            $id = Filter::get($id, 'digits');
+            $id = (int) $id;
 
             $usr = new Usuarios();
 
             $this->usuario = $usr->find_first($id);
 
-            $this->rolesUser = $usr->rolesUserIds();
+            if ($this->usuario) {// verificamos la existencia del usuario
+                $this->rolesUser = $usr->rolesUserIds();
 
-            $this->roles = Load::model('roles')->find_all_by_activo(1);
+                $this->roles = Load::model('roles')->find_all_by_activo(1);
 
-            if (Input::hasPost('usuario')) {
+                if (Input::hasPost('usuario')) {
 
-                if ($usr->guardar(Input::post('usuario'), Input::post('rolesUser'))) {
-                    Flash::valid('El Usuario Ha Sido Actualizado Exitosamente...!!!');
-                    return Router::redirect();
-                } else {
-                    Flash::warning('No se Pudieron Guardar los Datos...!!!');
+                    if ($usr->guardar(Input::post('usuario'), Input::post('rolesUser'))) {
+                        Flash::valid('El Usuario Ha Sido Actualizado Exitosamente...!!!');
+                        return Router::redirect();
+                    } else {
+                        Flash::warning('No se Pudieron Guardar los Datos...!!!');
+                    }
                 }
-            } else if (!$this->usuario) {
+            } else {
                 Flash::warning("No existe ningun usuario con id '{$id}'");
                 return Router::redirect();
             }
@@ -112,7 +114,7 @@ class UsuariosController extends AdminController {
 
     public function activar($id) {
         try {
-            $id = Filter::get($id, 'digits');
+            $id = (int) $id;
             $usuario = new Usuarios();
             if (!$usuario->find_first($id)) { //si no existe el usuario
                 Flash::warning("No existe ningun usuario con id '{$id}'");
@@ -129,7 +131,7 @@ class UsuariosController extends AdminController {
 
     public function desactivar($id) {
         try {
-            $id = Filter::get($id, 'digits');
+            $id = (int) $id;
             $usuario = new Usuarios();
             if (!$usuario->find_first($id)) { //si no existe el usuario
                 Flash::warning("No existe ningun usuario con id '{$id}'");

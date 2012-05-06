@@ -54,21 +54,28 @@ class RecursosController extends AdminController {
     }
 
     public function editar($id) {
+        $this->titulo = 'Editar Recurso';
         try {
-            $this->titulo = 'Editar Recurso';
+            $id = (int) $id;
+
             View::select('crear');
 
             $recurso = new Recursos();
             $this->recurso = $recurso->find_first($id);
 
-            if (Input::hasPost('recurso')) {
-                if ($recurso->update(Input::post('recurso'))) {
-                    Flash::valid('El Recurso ha sido Actualizado Exitosamente...!!!');
-                    return Router::redirect();
-                } else {
-                    Flash::warning('No se Pudieron Guardar los Datos...!!!');
-                    unset($this->recurso); //para que cargue el $_POST en el form
+            if ($this->recurso) {//validamos la existencia del rol
+                if (Input::hasPost('recurso')) {
+                    if ($recurso->update(Input::post('recurso'))) {
+                        Flash::valid('El Recurso ha sido Actualizado Exitosamente...!!!');
+                        return Router::redirect();
+                    } else {
+                        Flash::warning('No se Pudieron Guardar los Datos...!!!');
+                        unset($this->recurso); //para que cargue el $_POST en el form
+                    }
                 }
+            } else {
+                Flash::warning("No existe ningun recurso con id '{$id}'");
+                return Router::redirect();
             }
         } catch (KumbiaException $e) {
             View::excepcion($e);
@@ -78,8 +85,12 @@ class RecursosController extends AdminController {
     public function activar($id) {
         try {
             $rec = new Recursos();
-            $rec->find_first($id);
-            if ($rec->activar()) {
+
+            $id = (int) $id;
+
+            if (!$rec->find_first($id)) {
+                Flash::warning("No existe ningun recurso con id '{$id}'");
+            } elseif ($rec->activar()) {
                 Flash::valid("El recurso <b>{$rec->recurso}</b> Esta ahora <b>Activo</b>...!!!");
             } else {
                 Flash::warning("No se Pudo Activar el Recurso <b>{$rec->recurso}</b>...!!!");
@@ -93,8 +104,12 @@ class RecursosController extends AdminController {
     public function desactivar($id) {
         try {
             $rec = new Recursos();
-            $rec->find_first($id);
-            if ($rec->desactivar()) {
+
+            $id = (int) $id;
+
+            if (!$rec->find_first($id)) {
+                Flash::warning("No existe ningun recurso con id '{$id}'");
+            } elseif ($rec->desactivar()) {
                 Flash::valid("El recurso <b>{$rec->recurso}</b> Esta ahora <b>Inactivo</b>...!!!");
             } else {
                 Flash::warning("No se Pudo Desactivar el Recurso <b>{$rec->recurso}</b>...!!!");
@@ -108,8 +123,12 @@ class RecursosController extends AdminController {
     public function eliminar($id) {
         try {
             $rec = new Recursos();
-            $rec->find_first($id);
-            if ($rec->delete()) {
+
+            $id = (int) $id;
+
+            if (!$rec->find_first($id)) {
+                Flash::warning("No existe ningun recurso con id '{$id}'");
+            } elseif ($rec->delete()) {
                 Flash::valid("El recurso <b>{$rec->recurso}</b> ha sido Eliminado...!!!");
             } else {
                 Flash::warning("No se Pudo Eliminar el Recurso <b>{$rec->recurso}</b>...!!!");
