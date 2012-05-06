@@ -34,8 +34,10 @@ class Correos {
         $this->_mail->IsHTML(TRUE);
 
         $this->_mail->AddAddress($data['email'], $data['nombres']);
-
-        return $this->_mail->Send();
+        ob_start();
+        $res = $this->_mail->Send();
+        ob_clean();
+        return $res;
     }
 
 }
