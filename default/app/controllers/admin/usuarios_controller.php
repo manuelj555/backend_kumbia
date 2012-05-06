@@ -70,7 +70,9 @@ class UsuariosController extends AdminController {
                 $usr = new Usuarios(Input::post('usuario')); //esto es para tener atributos que no son campos de la tabla
                 if ($usr->guardar(Input::post('usuario'), Input::post('rolesUser'))) {
                     Flash::valid('El Usuario Ha Sido Agregado Exitosamente...!!!');
-                    return Router::redirect();
+                    if (!Input::isAjax()) {
+                        return Router::redirect();
+                    }
                 } else {
                     Flash::warning('No se Pudieron Guardar los Datos...!!!');
                 }
@@ -98,14 +100,18 @@ class UsuariosController extends AdminController {
 
                     if ($usr->guardar(Input::post('usuario'), Input::post('rolesUser'))) {
                         Flash::valid('El Usuario Ha Sido Actualizado Exitosamente...!!!');
-                        return Router::redirect();
+                        if (!Input::isAjax()) {
+                            return Router::redirect();
+                        }
                     } else {
                         Flash::warning('No se Pudieron Guardar los Datos...!!!');
                     }
                 }
             } else {
                 Flash::warning("No existe ningun usuario con id '{$id}'");
-                return Router::redirect();
+                if (!Input::isAjax()) {
+                    return Router::redirect();
+                }
             }
         } catch (KumbiaException $e) {
             View::excepcion($e);

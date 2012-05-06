@@ -26,6 +26,12 @@ Load::models('menus');
 
 class MenuController extends AdminController {
 
+    protected function after_filter() {
+        if (Input::isAjax()) {
+            View::select(NULL, NULL);
+        }
+    }
+
     public function index($pagina = 1) {
         try {
             $menus = new Menus();
@@ -43,7 +49,9 @@ class MenuController extends AdminController {
 
                 if ($menu->save()) {
                     Flash::valid('El Menu fué agregado Exitosamente...!!!');
-                    return Router::redirect();
+                    if (!Input::isAjax()) {
+                        return Router::redirect();
+                    }
                 } else {
                     Flash::warning('No se Pudieron Guardar los Datos...!!!');
                 }
@@ -69,7 +77,9 @@ class MenuController extends AdminController {
 
                     if ($menu->update(Input::post('menu'))) {
                         Flash::valid('El Menu fué actualizado Exitosamente...!!!');
-                        return Router::redirect();
+                        if (!Input::isAjax()) {
+                            return Router::redirect();
+                        }
                     } else {
                         Flash::warning('No se Pudieron Guardar los Datos...!!!');
                         unset($this->menu); //para que cargue el $_POST en el form
@@ -77,7 +87,9 @@ class MenuController extends AdminController {
                 }
             } else {
                 Flash::warning("No existe ningun menú con id '{$id}'");
-                return Router::redirect();
+                if (!Input::isAjax()) {
+                    return Router::redirect();
+                }
             }
         } catch (KumbiaException $e) {
             View::excepcion($e);

@@ -6,8 +6,9 @@
         <?php View::partial('backend/menus/roles') ?>
     </div>
     <div class="span8 span-derecho" >
-        <?php View::content() ?>
-        <?php echo Form::open(NULL, 'post', 'class="form-horizontal"') ?>
+        <div id="res-form-ajax"><?php View::content() ?></div>
+        <?php echo Ajax::form('res-form-ajax', NULL, 'form-horizontal') ?>
+        <?php //echo Form::open(NULL, 'post', 'class="form-horizontal"') ?>
         <?php echo Form::hidden('rol.id') ?>
         <div class="control-group">
             <label for="rol_rol">Nombre del rol* : </label>
@@ -29,10 +30,10 @@
         </div>
         <hr/>
         <?php //View::partial('backend/privilegios_rol'); ?>
-        <div class="form-actions">
+                <div class="form-actions">
             <?php echo Form::submit('Guardar Datos', 'class="btn btn-primary"') ?>
             <?php echo Html::linkAction('', 'Cancelar', 'class="btn"') ?>
-        </div>
+            </div>
         <?php echo Form::close() ?>
             </div>
         </div>

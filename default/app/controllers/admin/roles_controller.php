@@ -26,6 +26,12 @@ Load::models('roles');
 
 class RolesController extends AdminController {
 
+    protected function after_filter() {
+        if (Input::isAjax()) {
+            View::select(NULL, NULL);
+        }
+    }
+
     public function index($pag= 1) {
         try {
             $roles = new Roles();
@@ -46,7 +52,9 @@ class RolesController extends AdminController {
                 }
                 if ($rol->save()) {
                     Flash::valid('El Rol Ha Sido Agregado Exitosamente...!!!');
-                    return Router::redirect();
+                    if (!Input::isAjax()) {
+                        return Router::redirect();
+                    }
                 } else {
                     Flash::warning('No se Pudieron Guardar los Datos...!!!');
                 }
@@ -70,23 +78,20 @@ class RolesController extends AdminController {
 
             if ($this->rol) {//verificamos la existencia del rol
                 if (Input::hasPost('rol')) {
-
-                    if (Input::hasPost('roles_padres')) {
-//                    $padres = Input::post('roles_padres');
-//                    sort($padres);
-//                    $rol->padres = join(',', $padres);
-                    }
-
                     if ($rol->update(Input::post('rol'))) {
                         Flash::valid('El Rol Ha Sido Actualizado Exitosamente...!!!');
-                        return Router::redirect();
+                        if (!Input::isAjax()) {
+                            return Router::redirect();
+                        }
                     } else {
                         Flash::warning('No se Pudieron Guardar los Datos...!!!');
                     }
                 }
             } else {
                 Flash::warning("No existe ningun rol con id '{$id}'");
-                return Router::redirect();
+                if (!Input::isAjax()) {
+                    return Router::redirect();
+                }
             }
         } catch (KumbiaException $e) {
             View::excepcion($e);
@@ -107,7 +112,7 @@ class RolesController extends AdminController {
                     Flash::warning("No se Pudo Eliminar el Rol <b>{$rol->rol}</b>...!!!");
                 }
             } elseif (is_string($id)) {
-                if ( $rol->delete_all("id IN ($id)") ){
+                if ($rol->delete_all("id IN ($id)")) {
                     Flash::valid("Los Roles <b>{$id}</b> fueron Eliminados...!!!");
                 } else {
                     Flash::warning("No se Pudieron Eliminar los Roles...!!!");

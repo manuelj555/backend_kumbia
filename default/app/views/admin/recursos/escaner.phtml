@@ -4,21 +4,22 @@
         <?php echo Html::linkAction('crear', 'Crear Recurso', 'class="btn btn-info pull-right"') ?>
     </h1>
 </div>
-<?php echo Form::open() ?>
+<?php //echo Form::open() ?>
+<?php echo Ajax::form('res-form-ajax') ?>
         <p>
     <?php echo Form::submit('Guardar Recursos Seleccionados', 'name="guardar" class="btn btn-primary btn-large"') ?>
     </p>
-<?php View::content() ?>
-        <table class="table table-bordered table-striped">
-            <thead>
-                <tr>
-                    <th class="span4">Datos del Recurso</th>
-                    <th>Descripci&oacute;n</th>
-                    <th>Activo</th>
-                    <th>Agregar</th>
-                </tr>
-            </thead>
-            <tbody>
+    <div id="res-form-ajax"><?php View::content() ?></div>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th class="span4">Datos del Recurso</th>
+                <th>Descripci&oacute;n</th>
+                <th>Activo</th>
+                <th>Agregar</th>
+            </tr>
+        </thead>
+        <tbody>
 
         <?php foreach ($recursos->items as $index => $e) :++$index ?>
             <tr>

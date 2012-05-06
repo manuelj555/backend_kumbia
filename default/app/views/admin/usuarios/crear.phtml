@@ -6,8 +6,9 @@
         <?php View::partial('backend/menus/usuarios') ?>
     </div>
     <div class="span8 span-derecho" >
-        <?php View::content() ?>
-        <?php echo Form::open(NULL, 'post', 'class="form-horizontal"') ?>
+        <div id="res-form-ajax"><?php View::content() ?></div>
+        <?php echo Ajax::form('res-form-ajax', NULL, 'form-horizontal') ?>
+        <?php //echo Form::open(NULL, 'post', 'class="form-horizontal"') ?>
         <?php echo Form::hidden('usuario.id') ?>
         <div class="control-group">
             <label for="usuario_login">Nombre de Usuario (Login)* : </label>

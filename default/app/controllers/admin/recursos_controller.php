@@ -26,6 +26,12 @@ Load::models('recursos');
 
 class RecursosController extends AdminController {
 
+    protected function after_filter() {
+        if (Input::isAjax()) {
+            View::select(NULL, NULL);
+        }
+    }
+
     public function index($pagina = 1) {
         try {
             $recursos = new Recursos();
@@ -43,7 +49,9 @@ class RecursosController extends AdminController {
                 $recurso = new Recursos(Input::post('recurso'));
                 if ($recurso->save()) {
                     Flash::valid('El Recurso Ha Sido Agregado Exitosamente...!!!');
-                    return Router::redirect();
+                    if (!Input::isAjax()) {
+                        return Router::redirect();
+                    }
                 } else {
                     Flash::warning('No se Pudieron Guardar los Datos...!!!');
                 }
@@ -67,7 +75,9 @@ class RecursosController extends AdminController {
                 if (Input::hasPost('recurso')) {
                     if ($recurso->update(Input::post('recurso'))) {
                         Flash::valid('El Recurso ha sido Actualizado Exitosamente...!!!');
-                        return Router::redirect();
+                        if (!Input::isAjax()) {
+                            return Router::redirect();
+                        }
                     } else {
                         Flash::warning('No se Pudieron Guardar los Datos...!!!');
                         unset($this->recurso); //para que cargue el $_POST en el form
@@ -75,7 +85,9 @@ class RecursosController extends AdminController {
                 }
             } else {
                 Flash::warning("No existe ningun recurso con id '{$id}'");
-                return Router::redirect();
+                if (!Input::isAjax()) {
+                    return Router::redirect();
+                }
             }
         } catch (KumbiaException $e) {
             View::excepcion($e);
@@ -153,7 +165,7 @@ class RecursosController extends AdminController {
         try {
             $recurso = new Recursos();
             $this->recursos = $recurso->obtener_recursos_nuevos($pagina);
-            if (Input::hasPost('guardar')) {
+            if (Input::hasPost('guardar') || Input::hasPost('descripcion')) {
                 if ($recurso->guardar_nuevos()) {
                     $this->recursos = $recurso->obtener_recursos_nuevos($pagina);
                     Input::delete();

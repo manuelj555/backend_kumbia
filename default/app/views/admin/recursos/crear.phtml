@@ -6,9 +6,9 @@
         <?php View::partial('backend/menus/recursos') ?>
     </div>
     <div class="span8 span-derecho" >
-
-        <?php View::content() ?>
-        <?php echo Form::open(NULL, 'post', 'class="form-horizontal"') ?>
+        <div id="res-form-ajax"><?php View::content() ?></div>
+        <?php echo Ajax::form('res-form-ajax', NULL, 'form-horizontal') ?>
+        <?php //echo Form::open(NULL, 'post', 'class="form-horizontal"') ?>
         <?php echo Form::hidden('recurso.id') ?>
         <div class="row">
             <div class="span2">
