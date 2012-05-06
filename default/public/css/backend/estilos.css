@@ -80,3 +80,9 @@ table input[type=checkbox], table img{
     margin-right: 10px;
     margin-left: 20px;
 }
+
+.backend_menu_lateral img{
+    float: left;
+    margin-right: 5px;
+    vertical-align: top;
+}
