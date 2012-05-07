@@ -68,7 +68,7 @@ INSERT INTO `menus` (`id`, `menus_id`, `recursos_id`, `nombre`, `url`, `posicion
 (7, 18, 5, 'Privilegios', 'admin/privilegios', 90, NULL, 2, 1),
 (18, NULL, 17, 'Administración', 'admin/usuarios/index', 100, NULL, 2, 1),
 (19, NULL, 14, 'Mi Perfil', 'admin/usuarios/perfil', 90, NULL, 2, 1),
-(21, 18, 15, 'Config. Aplicacion', 'admin', 1000, NULL, 2, 1),
+(21, 18, 15, 'Config. Aplicacion', 'admin/index/config', 1000, NULL, 2, 1),
 (22, 18, 18, 'Auditorias', 'admin/auditorias', 900, NULL, 2, 1);
 
 -- --------------------------------------------------------

@@ -142,7 +142,7 @@ INSERT INTO "menus" VALUES ('5', '18', '4', 'Menu', 'admin/menu', '100', null, '
 INSERT INTO "menus" VALUES ('7', '18', '5', 'Privilegios', 'admin/privilegios', '90', null, '2', '1');
 INSERT INTO "menus" VALUES ('18', null, '17', 'Administración', 'admin/usuarios/index', '100', null, '2', '1');
 INSERT INTO "menus" VALUES ('19', null, '14', 'Mi Perfil', 'admin/usuarios/perfil', '90', null, '2', '1');
-INSERT INTO "menus" VALUES ('21', '18', '15', 'Config. Aplicacion', 'admin', '1000', null, '2', '1');
+INSERT INTO "menus" VALUES ('21', '18', '15', 'Config. Aplicacion', 'admin/index/config', '1000', null, '2', '1');
 INSERT INTO "menus" VALUES ('22', '18', '18', 'Auditorias', 'admin/auditorias', '900', null, '2', '1');
 
 -- ----------------------------
