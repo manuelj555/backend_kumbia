@@ -5,6 +5,7 @@
     <?php View::content() ?>
 </div> 
 <?php
+    View::partial('backend/barra_superior_listas', FALSE, array('texto' => 'Crear Usuario', 'opciones' => FALSE));
     $dt = new DataTable($usuarios);
     $dt->addHeaders('id', 'Login', 'Nombres', 'Correo Electronico', 'Estado', 'Editar');
     $dt->addFields('id', 'login', 'nombres', 'email');
@@ -13,8 +14,3 @@
     $dt->imgLink('figuras/editar.png', 'admin/usuarios/editar');
     echo $dt->render('class="table table-bordered table-striped"');
 ?>
-    <div class="form-actions">
-    <?php echo Html::linkAction("crear", 'Crear Usuario', 'class="btn btn-primary"') ?>
-</div>
-
-<?php //View::partial('backend/ultimos_log', FALSE, array('tabla' => 'usuarios')) ?>
