@@ -6,9 +6,8 @@ isset($accion) || $accion = 'crear';
 <div class="well" style="padding: 8px;border-radius: 2px;">
     <?php echo Html::linkAction($accion, $texto, 'class="btn btn-primary"') ?>
     <div class="btn-group pull-right">
-        <a class="btn" href="#" onclick="return false"><i class="icon-user icon-white"></i> Seleccionados</a>
-        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
-        <ul class="dropdown-menu">
+        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"> Seleccionados <span class="caret"></span></a>
+        <ul class="dropdown-menu" style="min-width: 130px">
             <li><a href="#" class="eliminar_seleccionados"><i class="icon-trash"></i> Eliminar</a></li>
         </ul>
     </div>
