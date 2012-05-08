@@ -3,12 +3,11 @@
 </div>
 <?php View::content() ?>
 <?php
-Table::headers('Ver', 'Editar', 'Eliminar');
-Table::imgLink('figuras/ver.png', Router::get('controller_path') . '/ver');
-Table::imgLink('figuras/editar.png', Router::get('controller_path') . '/editar');
-Table::imgLinkConfirm('figuras/eliminar.png', Router::get('controller_path') . '/borrar');
-echo Table::create($results, 'class="zebra-striped bordered-table"');
+View::partial('backend/barra_superior_listas', FALSE, array('opciones' => FALSE));
+$dt = new DataTable($results);
+$dt->addHeaders('Ver', 'Editar', 'Eliminar');
+$dt->imgLink('figuras/ver.png', Router::get('controller_path') . '/ver');
+$dt->imgLink('figuras/editar.png', Router::get('controller_path') . '/editar');
+$dt->imgLinkConfirm('figuras/eliminar.png', Router::get('controller_path') . '/borrar');
+echo $dt->render('class="table table-bordered table-striped"');
 ?>
-<div class="actions">
-    <?php echo Html::linkAction("crear/", 'Crear registro', 'class=" primary btn"') ?>
-</div>
