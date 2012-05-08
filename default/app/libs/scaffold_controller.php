@@ -2,7 +2,7 @@
 
 class ScaffoldController extends AppController {
 
-    public $scaffold = 'kumbia';
+    public $scaffold = 'bootstrap';
     public $model;
 
     public function index($page=1) {
