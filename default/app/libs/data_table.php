@@ -46,7 +46,6 @@ class DataTable {
      * </code>
      */
     protected $_campos = array();
-
     /**
      * Url para el paginador
      *
@@ -155,9 +154,9 @@ class DataTable {
                     $data['options'] = $options;
                 }
                 $this->_campos[] = $data;
+                $this->_use_default_fields = FALSE;
             }
         }
-        $this->_use_default_fields = FALSE;
     }
 
     /**
@@ -436,12 +435,14 @@ class DataTable {
      */
     protected function _getTableSchema($model) {
         if ($model) {
-            foreach (current($model)->fields as $e) {
-                $this->addFields($e);
-            }
-            foreach (current($model)->alias as $e) {
-                $this->addHeaders($e);
-            }
+            $temp_campos = $this->_campos;
+            $temp_cabeceras = $this->_cabeceras;
+            $this->_campos = array();
+            $this->_cabeceras = array();
+            call_user_func_array(array($this, 'addFields'), current($model)->fields);
+            call_user_func_array(array($this, 'addHeaders'), current($model)->alias);
+            $this->_campos = array_merge($this->_campos, $temp_campos);
+            $this->_cabeceras = array_merge($this->_cabeceras, $temp_cabeceras);
         }
     }
 
