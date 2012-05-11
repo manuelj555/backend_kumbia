@@ -11,9 +11,11 @@
 // @see Controller nuevo controller
 require_once CORE_PATH . 'kumbia/controller.php';
 
-class AdminController extends Controller {
+class AdminController extends Controller
+{
 
-    final protected function initialize() {
+    final protected function initialize()
+    {
         if (MyAuth::es_valido()) {
             View::template('backend/backend');
             $acl = new MyAcl();
@@ -33,6 +35,7 @@ class AdminController extends Controller {
                 Flash::info('Bienvenido al Sistema <b>' . Auth::get('nombres') . '</b>');
                 return Router::route_to();
             } else {
+                Input::delete();
                 Flash::warning('Datos de Acceso invalidos');
                 View::select(NULL, 'backend/logueo');
                 return FALSE;
@@ -43,16 +46,19 @@ class AdminController extends Controller {
         }
     }
 
-    final protected function finalize() {
+    final protected function finalize()
+    {
         
     }
 
-    public function logout() {
+    public function logout()
+    {
         MyAuth::cerrar_sesion();
         return Router::redirect('/');
     }
 
-    protected function intentos_pasados() {
+    protected function intentos_pasados()
+    {
         MyAuth::cerrar_sesion();
         Flash::warning('Has Sobrepasado el limite de intentos fallidos al tratar acceder a ciertas partes del sistema');
         return Router::redirect('/');
