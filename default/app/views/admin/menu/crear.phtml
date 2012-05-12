@@ -11,43 +11,43 @@
         <?php //echo Form::open(NULL, 'post', 'class="form-horizontal"') ?>
         <?php echo Form::hidden('menu.id') ?>
         <div class="control-group">
-            <label for="menu_menu_id">Menu Padre : </label>
+            <label class="control-label" for="menu_menu_id">Menu Padre : </label>
             <div class="controls">
                 <?php echo Form::dbSelect('menu.menus_id', 'nombre', array('menus', 'find', 'activo = 1'), 'Ninguno') ?>
             </div>
         </div>
         <div class="control-group">
-            <label for="menu_recursos_id">Recurso al que Accede : </label>
+            <label class="control-label" for="menu_recursos_id">Recurso al que Accede : </label>
             <div class="controls">
                 <?php echo Form::dbSelect('menu.recursos_id', 'recurso') ?>
             </div>
         </div>
         <div class="control-group">
-            <label for="menu_nombre">Texto a Mostrar : </label>
+            <label class="control-label" for="menu_nombre">Texto a Mostrar : </label>
             <div class="controls">
                 <?php echo Form::text('menu.nombre') ?>
             </div>
         </div>
         <div class="control-group">
-            <label for="menu_url">Url del Menu : </label>
+            <label class="control-label" for="menu_url">Url del Menu : </label>
             <div class="controls">
                 <?php echo Form::text('menu.url') ?>
             </div>
         </div>
         <div class="control-group">
-            <label for="menu_posicion">Posicion en el Menu : </label>
+            <label class="control-label" for="menu_posicion">Posicion en el Menu : </label>
             <div class="controls">
                 <?php echo Form::text('menu.posicion') ?>
             </div>
         </div>
         <div class="control-group">
-            <label for="menu_clases">Clases del Menu : </label>
+            <label class="control-label" for="menu_clases">Clases del Menu : </label>
             <div class="controls">
                 <?php echo Form::text('menu.clases') ?>
             </div>
         </div>
         <div class="control-group">
-            <label for="menu_visible_en">Visible En : </label>
+            <label class="control-label" for="menu_visible_en">Visible En : </label>
             <div class="controls" style="margin-left: 210px">
                 <label class="radio" style="white-space: nowrap">
                     <?php echo Form::radio('menu.visible_en', '1') ?>
@@ -64,7 +64,7 @@
             </div>
         </div>
         <div class="control-group">
-            <label for="menu_activo">Activo (Visible) : </label>
+            <label class="control-label" for="menu_activo">Activo (Visible) : </label>
             <div class="controls">
                 <?php echo Form::select('menu.activo', array('1' => 'Si', '0' => 'No')) ?>
                 </div>

@@ -4,49 +4,49 @@
 <?php View::content() ?>
 <?php echo Form::open(NULL, 'post', 'class="form-horizontal"') ?>
 <div class="control-group">
-    <label for="config_name">T&iacute;tulo del Proyecto : </label>
+    <label class="control-label" for="config_name">T&iacute;tulo del Proyecto : </label>
     <div class="controls">
         <?php echo Form::text('config.name') ?>
     </div>
 </div>
 <div class="control-group">
-    <label for="config_production">Proyecto en Producci&oacute;n : </label>
+    <label class="control-label" for="config_production">Proyecto en Producci&oacute;n : </label>
     <div class="controls">
         <?php echo Form::select('config.production', array('On' => 'Si', 'Off' => 'No')) ?>
     </div>
 </div>
 <div class="control-group">
-    <label for="config_production">Entorno a Usar para Conexión : </label>
+    <label class="control-label" for="config_production">Entorno a Usar para Conexión : </label>
     <div class="controls">
         <?php echo Form::select('config.database', $entornos) ?>
     </div>
 </div>
 <div class="control-group">
-    <label for="config_dbdate">Formato de Fechas : </label>
+    <label class="control-label" for="config_dbdate">Formato de Fechas : </label>
     <div class="controls">
         <?php echo Form::text('config.dbdate') ?>
     </div>
 </div>
 <div class="control-group">
-    <label for="config_debug">Debug : </label>
+    <label class="control-label" for="config_debug">Debug : </label>
     <div class="controls">
         <?php echo Form::select('config.debug', array('On' => 'Si', 'Off' => 'No')) ?>
     </div>
 </div>
 <div class="control-group">
-    <label for="config_log_exceptions">Mostrar Excepciones : </label>
+    <label class="control-label" for="config_log_exceptions">Mostrar Excepciones : </label>
     <div class="controls">
         <?php echo Form::select('config.log_exceptions', array('On' => 'Si', 'Off' => 'No')) ?>
     </div>
 </div>
 <div class="control-group">
-    <label for="config_charset">Codificaci&oacute;n de Caracteres : </label>
+    <label class="control-label" for="config_charset">Codificaci&oacute;n de Caracteres : </label>
     <div class="controls">
         <?php echo Form::text('config.charset') ?>
     </div>
 </div>
 <div class="control-group">
-    <label for="config_cache_driver">Driver de Cache : </label>
+    <label class="control-label" for="config_cache_driver">Driver de Cache : </label>
     <div class="controls">
         <?php echo Form::text('config.cache_driver') ?>
     </div>

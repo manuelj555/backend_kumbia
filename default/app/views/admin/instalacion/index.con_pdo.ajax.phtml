@@ -1,25 +1,25 @@
 <?php if (Input::isAjax())
     View::content() ?>
     <div class="control-group">
-        <label for="config_name">Origen de Datos (dsn) : </label>
+        <label class="control-label" for="config_name">Origen de Datos (dsn) : </label>
         <div class="controls">
         <?php echo Form::text('database.dsn') ?>
     </div>
 </div>
 <div class="control-group">
-    <label for="config_name">Usuario : </label>
+    <label class="control-label" for="config_name">Usuario : </label>
     <div class="controls">
         <?php echo Form::text('database.username') ?>
     </div>
 </div>
 <div class="control-group">
-    <label for="config_name">Contraseña : </label>
+    <label class="control-label" for="config_name">Contraseña : </label>
     <div class="controls">
         <?php echo Form::text('database.password') ?>
     </div>
 </div>
 <div class="control-group">
-    <label for="config_name">Driver de Conexión : </label>
+    <label class="control-label" for="config_name">Driver de Conexión : </label>
     <div class="controls">
         <?php echo Form::text('database.type') ?>
     </div>

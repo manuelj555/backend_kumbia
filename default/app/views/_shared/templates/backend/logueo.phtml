@@ -4,7 +4,8 @@
         <meta charset='<?php echo APP_CHARSET ?>' />
         <title><?php echo Config::get('config.application.name') ?></title>
         <?php
-        Tag::css('backend/bootstrap');
+        Tag::css('backend/bootstrap.min');
+        Tag::css('backend/bootstrap-responsive.min');
         Tag::css('backend/estilos');
         echo Html::includeCss();
         echo Tag::js('jquery/jquery.min');
@@ -33,15 +34,15 @@
                         <?php View::content() ?>
                         <?php echo Form::open(NULL, 'post', 'class="form-horizontal"') ?>
                         <div class="control-group">
-                            <label for="login">Usuario </label>
+                            <label class="control-label" for="login">Usuario </label>
                             <div class="controls">
                                 <?php echo Form::text('login') ?>
                             </div>
                         </div>
                         <div class="control-group">
-                            <label for="clave">Contrase&ntilde;a </label>
+                            <label class="control-label" for="clave">Contrase&ntilde;a </label>
                             <div class="controls">
-                                <?php echo Form::pass('clave') ?>
+                                <?php echo Form::pass('clave','autocomplete="off"') ?>
                             </div>
                         </div>
                     </div>

@@ -11,19 +11,19 @@
         <?php //echo Form::open(NULL, 'post', 'class="form-horizontal"') ?>
         <?php echo Form::hidden('rol.id') ?>
         <div class="control-group">
-            <label for="rol_rol">Nombre del rol* : </label>
+            <label class="control-label" for="rol_rol">Nombre del rol* : </label>
             <div class="controls">
                 <?php echo Form::text('rol.rol') ?>
             </div>
         </div>
         <div class="control-group">
-            <label for="rol_plantilla">Plantilla a Usar : </label>
+            <label class="control-label" for="rol_plantilla">Plantilla a Usar : </label>
             <div class="controls">
                 <?php echo Form::text('rol.plantilla') ?>
             </div>
         </div>
         <div class="control-group">
-            <label for="menus_activo">Activo (Visible) : </label>
+            <label class="control-label" for="menus_activo">Activo (Visible) : </label>
             <div class="controls">
                 <?php echo Form::select('rol.activo', array('1' => 'Si', '0' => 'No')) ?>
             </div>
