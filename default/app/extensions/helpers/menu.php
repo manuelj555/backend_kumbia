@@ -62,14 +62,15 @@ class Menu {
     protected static function generarItems($objeto_menu, $entorno) {
         $sub_menu = $objeto_menu->get_sub_menus(self::$_id_user, $entorno);
         $class = 'menu_' . str_replace('/', '_', $objeto_menu->url);
+        $class .= h($objeto_menu->clases);// . (self::es_activa($objeto_menu->url) ? ' active' : '');
         if ($sub_menu) {
-            $html = "<li class='{$class} dropdown {$objeto_menu->clases}'>" .
-                    Html::link($objeto_menu->url . '#', $objeto_menu->nombre .
+            $html = "<li class='" . h($class) . " dropdown'>" .
+                    Html::link($objeto_menu->url . '#', h($objeto_menu->nombre) .
                             ' <b class="caret"></b>',
                             'class="dropdown-toggle" data-toggle="dropdown"') . PHP_EOL;
         } else {
-            $html = "<li class='{$class} {$objeto_menu->clases}'>" .
-                    Html::link($objeto_menu->url, $objeto_menu->nombre) . PHP_EOL;
+            $html = "<li class='" . h($class) . "'>" .
+                    Html::link($objeto_menu->url, h($objeto_menu->nombre)) . PHP_EOL;
         }
         if ($sub_menu) {
             $html .= '<ul class="dropdown-menu">' . PHP_EOL;
