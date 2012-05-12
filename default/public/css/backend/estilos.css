@@ -70,9 +70,8 @@ ul.bienvenida li img{
     border-left: 1px solid #cccccc;
 }
 
-.span-derecho .flash,
-.span-derecho .row{
-    margin-left: 20px;
+.span-derecho{
+    padding-left: 20px;
 }
 
 table input[type=checkbox], table img{

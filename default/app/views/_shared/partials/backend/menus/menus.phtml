@@ -1,7 +1,7 @@
 <?php $res = Load::model('menus')->find('limit: 8', 'order: id DESC'); ?>
 <?php $actual = Form::getFieldValue('menu.id') //vriable con el id del registro que se edita ?>
 
-<ul class="nav nav-tabs nav-stacked">
+<ul class="nav nav-tabs nav-stacked visible-desktop">
     <li class="<?php if (!$actual) echo 'active'; ?>">
         <?php echo Html::linkAction("crear", 'Agregar Nuevo'); ?>
     </li>
