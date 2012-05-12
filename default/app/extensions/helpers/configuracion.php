@@ -75,7 +75,12 @@ TEXTO;
 
         $html .= "[application]" . PHP_EOL;
         foreach (self::$_configuracion as $variable => $valor) {
-            $html .= "$variable = $valor" . PHP_EOL;
+            if ( in_array($valor , array('On', 'Off')) || is_numeric($valor) ){
+                    $html .= "$variable = $valor" . PHP_EOL;                    
+                }else{
+                    $valor = h($valor);
+                    $html .= "$variable = \"$valor\"" . PHP_EOL;                    
+                }
         }
         return file_put_contents(self::$_archivo_ini, $html);
     }

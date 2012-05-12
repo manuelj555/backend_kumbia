@@ -32,7 +32,12 @@ class MyConfig
         foreach ($vars as $seccion => $datas) {
             $html .="[$seccion]" . PHP_EOL;
             foreach ($datas as $variable => $valor) {
-                $html .= "$variable = \"$valor\"" . PHP_EOL;
+                if ( in_array($valor , array('On', 'Off')) || is_numeric($valor) ){
+                    $html .= "$variable = $valor" . PHP_EOL;                    
+                }else{
+                    $valor = h($valor);
+                    $html .= "$variable = \"$valor\"" . PHP_EOL;                    
+                }
             }
             $html .= PHP_EOL;
         }
