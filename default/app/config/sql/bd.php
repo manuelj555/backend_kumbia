@@ -224,8 +224,8 @@ function getDataTable($tabla)
                     (18, 'admin', 'auditorias', NULL, 'admin/auditorias/*', 'Modulo para revisar las acciones que los usuarios han realizado en el sistema', '1'),
                     (19, NULL, 'index', 'index', 'index/index', 'recurso que no necesita permisos, es solo de prueba :-)', '1')",
         'usuarios' => "INSERT INTO usuarios (id, login, clave, nombres, email, activo) VALUES
-                    (2, 'usuario', '202cb962ac59075b964b07152d234b70', 'usuario del sistema', 'asd@mail.com', '1'),
-                    (3, 'admin', '202cb962ac59075b964b07152d234b70', 'usuario administrador del sistema', 'manuel_j555@hotmail.com', '1')",
+                    (2, 'usuario', '" . MyAuth::hash('123') . "', 'usuario del sistema', 'asd@mail.com', '1'),
+                    (3, 'admin', '" . MyAuth::hash('123') . "', 'usuario administrador del sistema', 'manuel_j555@hotmail.com', '1')",
         'roles_usuarios' => "INSERT INTO roles_usuarios (id, roles_id, usuarios_id) VALUES
                     (1, 1, 2),
                     (2, 2, 3),

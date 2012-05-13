@@ -52,7 +52,7 @@ class Usuarios extends ActiveRecord {
             Flash::error('Las <b>CLaves</b> no Coinciden...!!!');
             return 'cancel';
         } elseif (isset($this->clave2)) {
-            $this->clave = md5($this->clave);
+            $this->clave = MyAuth::hash($this->clave);
         }
     }
 
@@ -78,10 +78,10 @@ class Usuarios extends ActiveRecord {
     }
 
     public function cambiar_clave($datos) {
-        if (md5($datos['clave_actual']) != $this->clave) {
-            Flash::error('Las <b>CLave Actual</b> es Incorrecta...!!!');
-            return false;
-        }
+//        if (MyAuth::hash($datos['clave_actual']) != $this->clave) {
+//            Flash::error('Las <b>CLave Actual</b> es Incorrecta...!!!');
+//            return false;
+//        }
         $this->clave = $datos['nueva_clave'];
         $this->clave2 = $datos['nueva_clave2'];
         return $this->update();
