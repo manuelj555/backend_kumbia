@@ -15,7 +15,7 @@
         echo Tag::js('global');
         ?>
         <style>
-            #form_logueo label{
+            #form_logueo label.control-label{
                 width: 75px !important;
             }
             #form_logueo .controls{
@@ -43,9 +43,16 @@
                         <div class="control-group">
                             <label class="control-label" for="clave">Contrase&ntilde;a </label>
                             <div class="controls">
-                                <?php echo Form::pass('clave','autocomplete="off"') ?>
+                                <?php echo Form::pass('clave'/*,'autocomplete="off"'*/) ?>
                             </div>
                         </div>
+                        <?php if (Config::get('config.application.recordar_sesion')): ?>
+                        <div class="controls">
+                            <label class="checkbox">
+                                <?php echo Form::check('recordar', 1 , NULL,MyAuth::cookiesActivas()) ?> No cerrar Sesión
+                            </label>
+                        </div>
+                        <?php endif; ?>
                     </div>
                     <div class="modal-footer">
                         <?php if(Config::get('config.application.registro')): ?>
