@@ -22,7 +22,8 @@
  * @license http://www.gnu.org/licenses/agpl.txt GNU AFFERO GENERAL PUBLIC LICENSE version 3.
  * @author Manuel José Aguirre Garcia <programador.manuel@gmail.com>
  */
-class MyAcl {
+class MyAcl
+{
 
     /**
      * Objeto Acl2
@@ -43,16 +44,19 @@ class MyAcl {
      */
     protected $_recurso_actual = NULL;
 
-    public function __construct() {
+    public function __construct()
+    {
 
         //cargamos la lib Acl2 con el adaptador por defecto (SimpleAcl)
         self::$_acl = Acl2::factory();
 
         //obtenemos todos los roles del usuario actual
-        $roles = Load::model('usuarios')->find_first(Auth::get('id'))->getRoles();
+        $user = Load::model('usuarios')->find_first(Auth::get('id'));
 
-        //
-        $roles_id = $this->_establecerRoles($roles);
+        $roles_id = $this->_establecerRoles($user->getRoles());
+
+        $this->_establecerTemplate($user->id, $user->obtenerPlantilla($roles_id));
+
         self::$_acl->user(Auth::get('id'), $roles_id);
     }
 
@@ -61,12 +65,12 @@ class MyAcl {
      * @param <type> $roles resultado de una consulta del ActiveRecord
      * @return array arreglo con los ids de los roles a los que pertenece el usuario actual conectado
      */
-    protected function _establecerRoles($roles) {
+    protected function _establecerRoles($roles)
+    {
         $roles_id = array();
         foreach ($roles as $e) {
             if ($e->activo) { //seguridad
                 self::$_acl->parents($e->id, explode(',', $e->padres)); //seteamos los padres del rol
-                $this->_establecerTemplate($e->id, $e->plantilla); //indicamos el template a usar para el rol
                 $this->_establecerRecursos($e->id, $e->getRecursos()); //establecemos los recursos permitidos para el rol
                 $roles_id[] = $e->id; //vamos cargando los ids de los roles en un arreglo.
             }
@@ -80,7 +84,8 @@ class MyAcl {
      * @param int $rol id del rol
      * @param array $recursos resultado de una consulta del ActiveRecord
      */
-    protected function _establecerRecursos($rol, $recursos) {
+    protected function _establecerRecursos($rol, $recursos)
+    {
         $urls = array();
         foreach ($recursos as $e) {
             if ($e->activo) { //seguridad, solo recursos activos
@@ -95,12 +100,13 @@ class MyAcl {
      *
      * Es util cuando queremos mostrar pantallas diferentes dependiendo del user
      *
-     * @param int $rol id del rol
+     * @param int $user id del usuario
      * @param string $template nombre del template a usar para el rol
      */
-    protected function _establecerTemplate($rol, $template) {
+    protected function _establecerTemplate($user, $template)
+    {
         if (!empty($template)) {
-            $this->_templates["$rol"] = $template; //establecemos el template para el rol
+            $this->_templates["$user"] = $template; //establecemos el template para el rol
         }
     }
 
@@ -112,7 +118,8 @@ class MyAcl {
      *
      * @return boolean resultado del chequeo
      */
-    public function check() {
+    public function check()
+    {
 
         $usuario = Auth::get('id');
         $modulo = Router::get('module');
@@ -120,7 +127,11 @@ class MyAcl {
         $accion = Router::get('action');
 
         if (isset($this->_templates["$usuario"])) {
-            View::template("{$this->_templates["$usuario"]}");
+            if (file_exists(APP_PATH . 'views/_shared/templates' . $this->_templates["$usuario"])) {
+                View::template("{$this->_templates["$usuario"]}");
+            } else {
+                Flash::error("No existe el template <b>{$this->_templates["$usuario"]}</b> El cual está siendo usado por el perfil actual");
+            }
         }
         if ($modulo) {
             $recurso1 = "$modulo/$controlador/$accion";
@@ -132,7 +143,6 @@ class MyAcl {
             $recurso3 = "*/*";  //por si tiene acceso a todos los controladores
         }
         $recurso4 = "*";  //por si tiene acceso a todo el sistema
-
         //si se cumple algunas de las codiciones, el user tiene permiso.
         return self::$_acl->check($recurso1, $usuario) ||
         self::$_acl->check($recurso2, $usuario) ||
@@ -146,7 +156,8 @@ class MyAcl {
      *
      * @return boolean devuelve true si se ha sobrepasado el limite de intentos
      */
-    public function limiteDeIntentosPasado() {
+    public function limiteDeIntentosPasado()
+    {
         if (Session::has('intentos_acceso')) {
             $intentos = Session::get('intentos_acceso') + 1;
             Session::set('intentos_acceso', $intentos);
@@ -161,7 +172,8 @@ class MyAcl {
     /**
      * Reinicia el numero de intentos de un usuario por acceder a un recurso en cero.
      */
-    public function resetearIntentos() {
+    public function resetearIntentos()
+    {
         Session::set('intentos_acceso', 0);
     }
 

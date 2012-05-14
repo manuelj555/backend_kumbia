@@ -22,13 +22,15 @@
  * @license http://www.gnu.org/licenses/agpl.txt GNU AFFERO GENERAL PUBLIC LICENSE version 3.
  * @author Manuel José Aguirre Garcia <programador.manuel@gmail.com>
  */
-class Usuarios extends ActiveRecord {
+class Usuarios extends ActiveRecord
+{
 //put your code here
 //    public $debug = true;
 
     const ROL_DEFECTO = 1;
 
-    public function initialize() {
+    public function initialize()
+    {
         $min_clave = Config::get('config.application.minimo_clave');
         //$this->belongs_to('roles');
         $this->has_many('auditorias');
@@ -43,11 +45,13 @@ class Usuarios extends ActiveRecord {
         $this->validates_email_in('email', 'message: Debe escribir un <b>correo electronico</b> válido');
     }
 
-    public function before_validation_on_create() {
+    public function before_validation_on_create()
+    {
         $this->validates_uniqueness_of('login', 'message: El <b>Login</b> ya está siendo utilizado');
     }
 
-    public function before_save() {
+    public function before_save()
+    {
         if (isset($this->clave2) and $this->clave !== $this->clave2) {
             Flash::error('Las <b>CLaves</b> no Coinciden...!!!');
             return 'cancel';
@@ -56,7 +60,8 @@ class Usuarios extends ActiveRecord {
         }
     }
 
-    public function obtener_usuarios($pagina = 1) {
+    public function obtener_usuarios($pagina = 1)
+    {
 //        $cols = "usuarios.*";
 //        $join = "INNER JOIN roles_usuarios ru ON ru.usuarios_id = usuarios.id";
 //        $join .= " INNER JOIN roles r ON r.id = ru.roles_id";
@@ -64,7 +69,8 @@ class Usuarios extends ActiveRecord {
         return $this->paginate("page: $pagina"); //, "columns: $cols", "join: $join", "group: $group");
     }
 
-    public function obtener_usuarios_con_num_acciones($pagina = 1) {
+    public function obtener_usuarios_con_num_acciones($pagina = 1)
+    {
         $cols = "usuarios.*,COUNT(auditorias.id) as num_acciones";
         //$join = "INNER JOIN roles ON roles.id = usuarios.roles_id ";
         $join = "LEFT JOIN auditorias ON usuarios.id = auditorias.usuarios_id";
@@ -77,7 +83,8 @@ class Usuarios extends ActiveRecord {
         //return $this->paginate("page: $pagina", "columns: $cols", "join: $join", "group: $group");
     }
 
-    public function cambiar_clave($datos) {
+    public function cambiar_clave($datos)
+    {
 //        if (MyAuth::hash($datos['clave_actual']) != $this->clave) {
 //            Flash::error('Las <b>CLave Actual</b> es Incorrecta...!!!');
 //            return false;
@@ -94,7 +101,8 @@ class Usuarios extends ActiveRecord {
      * @param array $roles ids de los roles a guardar para el user
      * @return boolean retorna TRUE si se pudieron guardar los datos con exito
      */
-    public function guardar($data, $roles) {
+    public function guardar($data, $roles)
+    {
         $this->begin();
 
         if (!$this->save($data)) {
@@ -128,7 +136,8 @@ class Usuarios extends ActiveRecord {
         return TRUE;
     }
 
-    public function rolesUserIds() {
+    public function rolesUserIds()
+    {
         $roles_id = array();
         if ($this->roles_usuarios) {
             foreach ($this->roles_usuarios as $e) {
@@ -140,13 +149,15 @@ class Usuarios extends ActiveRecord {
         return $roles_id;
     }
 
-    public function getRolesNames() {
+    public function getRolesNames()
+    {
         $res = Load::model('roles')->distinct('rol',
                         "join: INNER JOIN roles_usuarios ru ON ru.roles_id = roles.id AND ru.usuarios_id = '$this->id'");
         return join(', ', $res);
     }
 
-    public function registrar() {
+    public function registrar()
+    {
         $this->activo = 0; //por defecto las cuentas están desactivadas
         $clave = $this->clave;
 
@@ -184,7 +195,8 @@ class Usuarios extends ActiveRecord {
      * @param <type> $hash
      * @return <type>
      */
-    public function activarCuenta($id_usuario, $hash) {
+    public function activarCuenta($id_usuario, $hash)
+    {
         if ($this->find_first((int) $id_usuario)) { //verificamos la existencia del user
             if (md5($this->login . $this->id . $this->clave) === $hash) {
                 $this->activo = 1;
@@ -194,6 +206,16 @@ class Usuarios extends ActiveRecord {
             }
         }
         return FALSE;
+    }
+
+    public function obtenerPlantilla($roles_id)
+    {
+        $res = Load::model('roles')->find_by_sql('select plantilla,MAX(c)
+                from (select roles_id, count(id) as c
+                      from roles_recursos GROUP BY roles_id) as t
+                INNER JOIN roles on roles.id = t.roles_id
+                WHERE roles.id IN (' . join(',',$roles_id). ')');
+        return $res->plantilla;
     }
 
 }
