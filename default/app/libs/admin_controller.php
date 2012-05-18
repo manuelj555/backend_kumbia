@@ -49,7 +49,7 @@ class AdminController extends Controller
     protected function _logueoValido($user, $pass, $encriptar = TRUE)
     {
         if (MyAuth::autenticar($user, $pass, $encriptar)) {
-            Flash::info('Bienvenido al Sistema <b>' . Auth::get('nombres') . '</b>');
+            Flash::info('Bienvenido al Sistema <b>' . h(Auth::get('nombres')) . '</b>');
             return $this->_tienePermiso();
         } else {
             Input::delete();
