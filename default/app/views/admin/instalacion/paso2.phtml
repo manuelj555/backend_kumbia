@@ -28,5 +28,6 @@
 <div class="form-actions">
     <?php echo Html::linkAction('index', 'Volver', 'class="btn"') ?>
     <?php echo Form::submit('Crear Tablas', 'class="btn btn-primary"') ?>
+    <?php if (count($tablas_existentes) >= count($tablas_crear)) echo Html::linkAction('paso3', 'Saltar Paso', 'class="btn"') ?>
 </div>
 <?php echo Form::close() ?>
