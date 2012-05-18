@@ -47,7 +47,11 @@ class LectorRecursos {
 
     protected static function escanearDir($modulo = NUll) {
         $dir = APP_PATH . 'controllers' . ( $modulo ? "/$modulo" : '' );
-        $res = scandir($dir);
+        $res = @scandir($dir);
+        if (!$res){
+            //Flash::error('Imposible escanear los recursos del Sistema...!!!');
+            return;
+        }
         $modulos = array();
         foreach ($res as $e) {
             if (strpos($e, '_controller.php')) {
