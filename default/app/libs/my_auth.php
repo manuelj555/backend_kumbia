@@ -65,12 +65,12 @@ class MyAuth
 
     public static function cookiesActivas()
     {
-        return isset($_COOKIE[APP_PATH]) && is_array(self::getCookies());
+        return isset($_COOKIE[md5(self::$_clave_sesion)]) && is_array(self::getCookies());
     }
 
     public static function setCookies($user, $pass)
     {
-        setcookie(APP_PATH, serialize(array(
+        setcookie(md5(self::$_clave_sesion), serialize(array(
                     'login' => $user,
                     'clave' => $pass
                 )), time() + 60 * 60 * 24 * 30);
@@ -78,8 +78,8 @@ class MyAuth
 
     public static function getCookies()
     {
-        if (isset($_COOKIE[APP_PATH])) {
-            return unserialize($_COOKIE[APP_PATH]);
+        if (isset($_COOKIE[md5(self::$_clave_sesion)])) {
+            return unserialize($_COOKIE[md5(self::$_clave_sesion)]);
         } else {
             return NULL;
         }
@@ -87,8 +87,8 @@ class MyAuth
 
     public static function deleteCookies()
     {
-        setcookie(APP_PATH,'',time()- 1);
-        unset($_COOKIE[APP_PATH]);
+        setcookie(md5(self::$_clave_sesion),'',time()- 1);
+        unset($_COOKIE[md5(self::$_clave_sesion)]);
     }
 
 }
