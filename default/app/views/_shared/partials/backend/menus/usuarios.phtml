@@ -7,7 +7,7 @@
     </li>
     <?php foreach ($res as $e): ?>
         <li class="<?php if ($e->id == $actual) echo 'active'; ?>">
-            <?php $content = Html::gravatar($e->email,'gravatar','class="thumbnail"',35); ?>
+            <?php $content = Html::gravatar($e->email,'gravatar',35); ?>
             <?php $content .= h(strtoupper($e->login)); ?>
             <?php $content .= "<h6>" . h($e->nombres) . "</h6>" ?>
             <?php echo Html::linkAction("editar/$e->id", "$content<div style=\"clear: both\"></div>"); ?>
