@@ -214,7 +214,8 @@ class Usuarios extends ActiveRecord
                 from (select roles_id, count(id) as c
                       from roles_recursos GROUP BY roles_id) as t
                 INNER JOIN roles on roles.id = t.roles_id
-                WHERE roles.id IN (' . join(',',$roles_id). ')');
+                WHERE roles.id IN (' . join(',',$roles_id). ')
+                GROUP BY plantilla');
         return $res->plantilla;
     }
 
