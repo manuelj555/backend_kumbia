@@ -63,41 +63,41 @@ class Form
             $id = "{$formField[0]}_{$formField[1]}";
             // Nombre de campo
             $name = "{$formField[0]}[{$formField[1]}]";
-            
+			
 			// Verifica en $_POST
-            if(isset($_POST[$formField[0]][$formField[1]])) {
-                $value = $_POST[$formField[0]][$formField[1]];
-            } elseif($value === null) { 
+			if(isset($_POST[$formField[0]][$formField[1]])) {
+				$value = $_POST[$formField[0]][$formField[1]];
+			} elseif($value === null) { 
 				// Autocarga de datos
-                $form = View::getVar($formField[0]);
-                if(is_array($form)) {
-                   if(isset($form[$formField[1]])) $value = $form[$formField[1]];
-               } elseif(is_object($form)) {
-                   if(isset($form->$formField[1])) $value = $form->{$formField[1]};
-               }
-           }
-       } else {
+				$form = View::getVar($formField[0]);
+				if(is_array($form)) {
+					if(isset($form[$formField[1]])) $value = $form[$formField[1]];
+				} elseif(is_object($form)) {
+					if(isset($form->$formField[1])) $value = $form->{$formField[1]};
+				}
+			}
+		} else {
 			// Asignacion de Id y Nombre de campo
-         $id = $name = $field;
-         
+			$id = $name = $field;
+			
 			// Verifica en $_POST
-         if(isset($_POST[$field])) {
-            $value = $_POST[$field];
-        } elseif($value === null) { 
+			if(isset($_POST[$field])) {
+				$value = $_POST[$field];
+			} elseif($value === null) { 
 				// Autocarga de datos
-            $value = View::getVar($field);
-        }
-    }
+				$value = View::getVar($field);
+			}
+		}
 
         // Filtrar caracteres especiales
-    if ($value !== null && $filter) {
-        $value = htmlspecialchars($value, ENT_COMPAT, APP_CHARSET);
-    }
+        if ($value !== null && $filter) {
+            $value = htmlspecialchars($value, ENT_COMPAT, APP_CHARSET);
+        }
 
 		// Devuelve los datos
-    return array('id' => $id, 'name' => $name, 'value' => $value);
-}
-
+        return array('id' => $id, 'name' => $name, 'value' => $value);
+    }
+    
 	/**
      * Obtiene el valor de un componente check tomado
      * del mismo valor del nombre del campo y formulario
@@ -120,35 +120,35 @@ class Form
             $id = "{$formField[0]}_{$formField[1]}";
             // Nombre de campo
             $name = "{$formField[0]}[{$formField[1]}]";
-            
+			
 			// Verifica en $_POST
-            if(isset($_POST[$formField[0]][$formField[1]])) {
-                $checked = $_POST[$formField[0]][$formField[1]] == $checkValue;
-            } elseif($checked === null) { 
+			if(isset($_POST[$formField[0]][$formField[1]])) {
+				$checked = $_POST[$formField[0]][$formField[1]] == $checkValue;
+			} elseif($checked === null) { 
 				// Autocarga de datos
-                $form = View::getVar($formField[0]);
-                if(is_array($form)) {
-                   $checked = isset($form[$formField[1]]) && $form[$formField[1]] == $checkValue;
-               } elseif(is_object($form)) {
-                   $checked = isset($form->$formField[1]) && $form->$formField[1] == $checkValue;
-               }
-           }
-       } else {
+				$form = View::getVar($formField[0]);
+				if(is_array($form)) {
+					$checked = isset($form[$formField[1]]) && $form[$formField[1]] == $checkValue;
+				} elseif(is_object($form)) {
+					$checked = isset($form->$formField[1]) && $form->$formField[1] == $checkValue;
+				}
+			}
+		} else {
 			// Asignacion de Id y Nombre de campo
-         $id = $name = $field;
-         
+			$id = $name = $field;
+			
 			// Verifica en $_POST
-         if(isset($_POST[$field])) {
-            $checked = $_POST[$field] == $checkValue;
-        } elseif($checked === null) { 
+			if(isset($_POST[$field])) {
+				$checked = $_POST[$field] == $checkValue;
+			} elseif($checked === null) { 
 				// Autocarga de datos
-            $checked = View::getVar($field) == $checkValue;
-        }
-    }
+				$checked = View::getVar($field) == $checkValue;
+			}
+		}
 
 		// Devuelve los datos
-    return array('id' => $id, 'name' => $name, 'checked' => $checked);
-}
+        return array('id' => $id, 'name' => $name, 'checked' => $checked);
+    }
 
     /**
      * Obtiene el valor del campo por autocarga de valores
@@ -167,35 +167,35 @@ class Form
         // Formato modelo.campo
         if(isset($formField[1])) {
 			// Verifica en $_POST
-         if(isset($_POST[$formField[0]][$formField[1]])) {
-            $value = $_POST[$formField[0]][$formField[1]];
-        } else { 
+			if(isset($_POST[$formField[0]][$formField[1]])) {
+				$value = $_POST[$formField[0]][$formField[1]];
+			} else { 
 				// Autocarga de datos
-            $form = View::getVar($formField[0]);
-            if(is_array($form)) {
-               if(isset($form[$formField[1]])) $value = $form[$formField[1]];
-           } elseif(is_object($form)) {
-               if(isset($form->$formField[1])) $value = $form->{$formField[1]};
-           }
-       }
-   } else {
+				$form = View::getVar($formField[0]);
+				if(is_array($form)) {
+					if(isset($form[$formField[1]])) $value = $form[$formField[1]];
+				} elseif(is_object($form)) {
+					if(isset($form->$formField[1])) $value = $form->{$formField[1]};
+				}
+			}
+		} else {
 			// Verifica en $_POST
-     if(isset($_POST[$field])) {
-        $value = $_POST[$field];
-    } else { 
+			if(isset($_POST[$field])) {
+				$value = $_POST[$field];
+			} else { 
 				// Autocarga de datos
-        $value = View::getVar($field);
-    }
-}
+				$value = View::getVar($field);
+			}
+		}
 
         // Filtrar caracteres especiales
-if ($value !== null && $filter) {
-    return htmlspecialchars($value, ENT_COMPAT, APP_CHARSET);
-}
-
+        if ($value !== null && $filter) {
+            return htmlspecialchars($value, ENT_COMPAT, APP_CHARSET);
+        }
+        
         // Devuelve valor
-return $value;
-}
+        return $value;
+    }
 
     /**
      * Crea un campo input

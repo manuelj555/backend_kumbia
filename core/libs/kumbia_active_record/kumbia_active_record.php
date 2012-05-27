@@ -21,7 +21,7 @@
 /**
  * @see Db
  */
-require_once CORE_PATH . 'libs/db/db.php';
+require CORE_PATH . 'libs/db/db.php';
 
 /**
  * ActiveRecordBase Clase para el Mapeo Objeto Relacional
@@ -1227,11 +1227,7 @@ class KumbiaActiveRecord
         if (!$form) {
             $form = $this->source;
         }
-        $result = $this->create($_REQUEST[$form]);
-        if (!$result) {
-            Dispatcher::get_controller()->$form = $_REQUEST[$form];
-        }
-        return $result;
+        return $this->create($_REQUEST[$form]);
     }
 
     /**
@@ -1245,11 +1241,7 @@ class KumbiaActiveRecord
         if (!$form) {
             $form = $this->source;
         }
-        $result = $this->save($_REQUEST[$form]);
-        if (!$result) {
-            Dispatcher::get_controller()->$form = $_REQUEST[$form];
-        }
-        return $result;
+        return $this->save($_REQUEST[$form]);
     }
 
     /**
@@ -1263,11 +1255,7 @@ class KumbiaActiveRecord
         if (!$form) {
             $form = $this->source;
         }
-        $result = $this->update($_REQUEST[$form]);
-        if (!$result) {
-            Dispatcher::get_controller()->$form = $_REQUEST[$form];
-        }
-        return $result;
+        return $this->update($_REQUEST[$form]);
     }
 
     /**
@@ -2529,7 +2517,7 @@ class KumbiaActiveRecord
             if (is_file($file)) {
                 include $file;
             } else {
-                throw new KumbiaException("No existe el modelo $model");
+                throw new KumbiaException(null, 'no_model');
             }
         }
 
