@@ -37,12 +37,12 @@ class InstalacionController extends AppController {
 
     public function index($index_entorno = 0) {
         $inst = new Instalacion();
-        $this->entornos_bd = $inst->entornosConexion();
-        $this->entorno = $inst->entorno($index_entorno);
+        //$this->entornos_bd = $inst->entornosConexion();
+        //$this->entorno = $inst->entorno($index_entorno);
         $this->database = $inst->configuracionEntorno($index_entorno);
 
         if (Input::hasPost('database')) {
-            if ($inst->guardarDatabases($_POST['entorno'], $_POST['database'])) {
+            if ($inst->guardarDatabases($index_entorno, $_POST['database'])) {
                 if ($inst->verificarConexion()) {
                     return Router::toAction('paso2');
                 }
@@ -68,29 +68,21 @@ class InstalacionController extends AppController {
         }
     }
 
-    public function describe() {
-        View::select(NULL);
-
-        Config::read('bd_scheme');
-        var_dump(Config::get('bd_scheme.usuarios'));
-        var_dump(Db::factory()->drop_table('usuarios'));
-        var_dump(Db::factory()->create_table('usuarios', Config::get('bd_scheme.usuarios')));
-        var_dump(Db::factory()->describe_table('usuarios'));
-        var_dump(Db::factory()->list_tables());
-    }
-
     public function paso2() {
         $inst = new Instalacion();
         if ($inst->verificarConexion()) {
-            $this->tablas_crear = $inst->listarTablasPorCrear();
-            if (Input::hasPost('tablas')) {
-                if ($inst->crearTablas(Input::post('tablas'))) {
-                    return Router::toAction('paso3');
-                } else {
-                    Flash::error('No se Pudieron crear todas las Tablas...!!!');
+            $database = $inst->configuracionEntorno(0);
+            if ($inst->existeArchivoSql($database['type'])) {
+                // $this->tablas_crear = $inst->listarTablasPorCrear();
+                $this->tablas_existentes = $inst->listarTablasExistentes();
+                $this->sql = APP_PATH . 'config/sql/';
+                if ( $inst->instalacionBDCorrecta($this->tablas_existentes) ) {
+                    View::response('completado');
                 }
+            }else{
+                Flash::error("No existe el driver de Conexión <b>{$database['type']}</b> para conectarse a la Base de datos"); 
+                View::response('error');
             }
-            $this->tablas_existentes = $inst->listarTablasExistentes();
         }else{
             View::response('error');
         }

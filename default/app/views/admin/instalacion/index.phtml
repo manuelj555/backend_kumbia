@@ -5,10 +5,10 @@
 <?php View::content() ?>
 <?php echo Form::open(NULL, 'post', 'class="form-horizontal"') ?>
 <div class="control-group">
-    <label class="control-label" for="config_name">Entorno a Configurar : </label>
+    <!-- <label class="control-label" for="config_name">Entorno a Configurar : </label>
     <div class="controls">
         <?php echo Ajax::select('entorno', $entornos_bd, 'res-ajax', 'index') ?>
-    </div>
+    </div> -->
 </div>
 <div id="res-ajax">
     <?php require 'index.ajax.phtml'; ?>

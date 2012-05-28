@@ -6,28 +6,20 @@
 <h5>Tablas de la Base de Datos <?php //eh(Config::get('databases.'))     ?></h5>
 <ul>
     <?php foreach ((array) $tablas_existentes as $t): ?> 
-        <li><?php eh($t) ?></li>
-    <?php endforeach; ?> 
-</ul>
-<h5>Tablas a Crear</h5>
-<ul>
-    <?php foreach ((array) $tablas_crear as $t): ?> 
-    <?php if (substr($t, 0, 5) == 'data_') continue; ?>
-        <li>
-            <?php echo Form::check("tablas.$t", $t, NULL, TRUE) ?> <?php eh($t) ?>
-            <h6 style="display: inline;margin-left: 20px;">
-                <?php echo in_array($t, $tablas_existentes) ? 'Se Reemplazará' : '' ?>
-            </h6>
-        </li>
+        <li><h5><?php eh($t) ?> <small><?php if ( Instalacion::esTablaNecesaria($t) ) echo ' usada en el backend'; ?></small></h5></li>
     <?php endforeach; ?> 
 </ul>
 <hr />
 <p>
-    Es recomendable crear todas las tablas para el correcto funcionamiento de la aplicación
+    Debe crear las tablas necesarias en la base de datos para el funcionamiento del backend.
+</p>
+<p>
+    Acontinuación ejecute el archivo .sql correspondiente a su servidor
+    de base de datos que se encuentra en : <br/><b><?php eh($sql) ?></b> para continuar con la instalación.
 </p>
 <div class="form-actions">
     <?php echo Html::linkAction('index', 'Volver', 'class="btn"') ?>
-    <?php echo Form::submit('Crear Tablas', 'class="btn btn-primary"') ?>
-    <?php if (count($tablas_existentes) >= count($tablas_crear)) echo Html::linkAction('paso3', 'Saltar Paso', 'class="btn"') ?>
+    <?php echo Form::submit('Verificar Estado', 'class="btn btn-primary"') ?>
+    <?php if (count($tablas_existentes) >= 7) echo Html::linkAction('paso3', 'Saltar Paso', 'class="btn"') ?>
 </div>
 <?php echo Form::close() ?>

@@ -25,6 +25,10 @@
 <div class="control-group">
     <label class="control-label" for="config_name">Driver de Conexión : </label>
     <div class="controls">
-        <?php echo Form::text('database.type') ?>
+        <?php echo Form::select('database.type',array(
+            'mysqli' => 'mysqli',
+            'mysql' => 'mysql',
+            'pgsql' => 'pgsql',
+            )) ?>
     </div>
 </div>

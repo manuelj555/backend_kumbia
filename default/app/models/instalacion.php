@@ -1,9 +1,9 @@
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+if ($_SERVER['REMOTE_ADDR'] != '127.0.0.1') { //seguridad
+    header('HTTP/1.0 403 Forbidden');
+    exit('No tienes permisos para acceder a esta dirección...!!!');
+}
 
 /**
  * Description of instalacion
@@ -12,6 +12,10 @@
  */
 class Instalacion
 {
+
+    protected static $_tablas_necesarias = array(
+        'usuarios','auditorias','roles','recursos',
+        'roles_recursos','roles_usuarios','menus');
 
     public function __construct()
     {
@@ -64,13 +68,13 @@ class Instalacion
         return $tablas_existentes;
     }
 
-    public function listarTablasPorCrear()
+    /*public function listarTablasPorCrear()
     {
         require_once APP_PATH . 'config/sql/bd.php';
         return array_keys(getEsquema());
-    }
+    }*/
 
-    public function crearTablas($tablas)
+    /*public function crearTablas($tablas)
     {
         require_once APP_PATH . 'config/sql/bd.php';
         $esquema = getEsquema();
@@ -92,7 +96,7 @@ class Instalacion
             }
         }
         return $exito;
-    }
+    }*/
 
     public function verificarConexion()
     {
@@ -107,6 +111,36 @@ class Instalacion
             return FALSE;
         }
         return TRUE;
+    }
+
+    public function existeArchivoSql($driver){
+        return in_array($driver, array('mysql','mysqli','pgsql'));
+    }
+
+    public static function tablasNecesarias()
+    {
+        return self::$_tablas_necesarias;
+    }
+
+    public static function esTablaNecesaria($tabla)
+    {
+        return in_array($tabla, self::tablasNecesarias());
+    }
+
+    /**
+     * Verifica que la bd y las tablas necesarias esten instaladas
+     * 
+     * @param array $tablas_existentes 
+     */ 
+    public static function instalacionBDCorrecta($tablas_existentes){
+        $numTablasNecesarias = count(self::tablasNecesarias());
+        $necesariasCreadas = 0;
+        foreach($tablas_existentes as $e){
+            if ( self::esTablaNecesaria($e) ){
+                ++$necesariasCreadas;
+            }
+        }
+        return $necesariasCreadas === $numTablasNecesarias;
     }
 
 }
