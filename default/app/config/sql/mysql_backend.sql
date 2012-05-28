@@ -226,8 +226,8 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
 --
 
 INSERT INTO `usuarios` (`id`, `login`, `clave`, `nombres`, `email`, `activo`) VALUES
-(2, 'usuario', '/bzxN0zFpwaIw', 'usuario del sistema', 'asd@mail.com', 1),
-(3, 'admin', '/bzxN0zFpwaIw', 'usuario administrador del sistema', 'manuel_j555@hotmail.com', 1);
+(2, 'usuario', 'baxuN8I44GotM', 'usuario del sistema', 'asd@mail.com', 1),
+(3, 'admin', 'baxuN8I44GotM', 'usuario administrador del sistema', 'manuel_j555@hotmail.com', 1);
 
 --
 -- Filtros para las tablas descargadas (dump)
