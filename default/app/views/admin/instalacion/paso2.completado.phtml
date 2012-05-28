@@ -5,7 +5,7 @@
 <h5>Tablas de la Base de Datos <?php //eh(Config::get('databases.'))     ?></h5>
 <ul>
     <?php foreach ((array) $tablas_existentes as $t): ?> 
-        <li><?php eh($t) ?></li>
+        <li><h5><?php eh($t) ?> <small><?php if ( Instalacion::esTablaNecesaria($t) ) echo ' usada en el backend'; ?></small></h5></li>
     <?php endforeach; ?> 
 </ul>
 <hr />
