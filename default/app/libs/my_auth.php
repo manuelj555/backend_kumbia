@@ -25,18 +25,20 @@
 class MyAuth
 {
 
-    protected static $_clave_sesion = PUBLIC_PATH;
+    /**
+     * Namespace de las cookies y el hash de clave que se va a encriptar
+     * Recordar que si se cambian, se deben actualizar las claves en la bd.
+     */ 
+    protected static $_clave_sesion = 'backend_kumbiaphp';
 
     public static function autenticar($user, $pass, $encriptar = TRUE)
     {
-        Session::set(self::$_clave_sesion . '_sesion_activa', false);
         $pass = $encriptar ? self::hash($pass) : $pass;
         $auth = new Auth('class: usuarios',
                         'login: ' . $user,
                         'clave: ' . $pass,
                         "activo: 1");
         if ($auth->authenticate()) {
-            Session::set(self::$_clave_sesion . '_sesion_activa', true);
             if (Input::post('recordar')) {
                 self::setCookies($user, $pass);
             } else {
@@ -48,13 +50,12 @@ class MyAuth
 
     public static function es_valido()
     {
-        return Session::get(self::$_clave_sesion . '_sesion_activa');
+        return Auth::is_valid();
     }
 
     public static function cerrar_sesion()
     {
         Auth::destroy_identity();
-        Session::delete(self::$_clave_sesion . '_sesion_activa');
         self::deleteCookies();
     }
 
