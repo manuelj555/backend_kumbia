@@ -44,47 +44,40 @@ class Menu {
      */
     protected static $_id_user = NULL;
 
-    public static function render($id_user, $entorno = self::BACKEND) {
-        self::$_id_user = $id_user;
-        $rL = new Menus();
-        $registros = $rL->obtener_menu_por_usuario($id_user, $entorno);
+    public static function render(MenuInterface $menu, $entorno = self::BACKEND) {
+        $registros = $menu->getItems($entorno);
         $html = '';
         if ($registros) {
             $html .= '<ul class="nav">' . PHP_EOL;
             foreach ($registros as $e) {
-                $html .= self::generarItems($e, $entorno);
+                $html .= self::_generarItem($e, $entorno);
             }
             $html .= '</ul>' . PHP_EOL;
         }
         return $html;
     }
 
-    protected static function generarItems($objeto_menu, $entorno) {
-        $sub_menu = $objeto_menu->get_sub_menus(self::$_id_user, $entorno);
-        $class = 'menu_' . str_replace('/', '_', $objeto_menu->url);
-        $class .= h($objeto_menu->clases);// . (self::es_activa($objeto_menu->url) ? ' active' : '');
-        if ($sub_menu) {
+    protected static function _generarItem(MenuInterface $menu, $entorno) {
+        $sub_menus = $menu->hasSubItems(); //devuelve los sub items de existir
+        $sub_menus = $menu->getSubItems(); //devuelve los sub items de existir
+        $class = 'menu_' . str_replace('/', '_', $menu->getUrl()); //la url formará parte de las clases
+        $class .= ' '. h($menu->getClasses()); //obtenemos las clases del item actual
+        if ($sub_menus) { //si tiene items hijos
             $html = "<li class='" . h($class) . " dropdown'>" .
-                    Html::link($objeto_menu->url . '#', h($objeto_menu->nombre) .
+                    Html::link($menu->getUrl() . '#', h($menu->getTitle()) .
                             ' <b class="caret"></b>',
                             'class="dropdown-toggle" data-toggle="dropdown"') . PHP_EOL;
         } else {
             $html = "<li class='" . h($class) . "'>" .
-                    Html::link($objeto_menu->url, h($objeto_menu->nombre)) . PHP_EOL;
+                    Html::link($menu->getUrl(), h($menu->getTitle())) . PHP_EOL;
         }
-        if ($sub_menu) {
+        if ($sub_menus) {
             $html .= '<ul class="dropdown-menu">' . PHP_EOL;
-            foreach ($sub_menu as $e) {
-                $html .= self::generarItems($e, $entorno);
+            foreach ($sub_menus as $e) {
+                $html .= self::_generarItem($e, $entorno);
             }
             $html .= '</ul>' . PHP_EOL;
         }
         return $html . "</li>" . PHP_EOL;
     }
-
-    protected static function es_activa($url) {
-        $url_actual = substr(Router::get('route'), 1);
-        return (strpos($url, $url_actual) !== false || strpos($url, "$url_actual/index") !== false);
-    }
-
 }

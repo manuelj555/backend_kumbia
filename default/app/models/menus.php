@@ -22,25 +22,13 @@
  * @license http://www.gnu.org/licenses/agpl.txt GNU AFFERO GENERAL PUBLIC LICENSE version 3.
  * @author Manuel José Aguirre Garcia <programador.manuel@gmail.com>
  */
-class Menus extends ActiveRecord {
-//    public $debug = true;
-//    public $logger = true;
 
-    /**
-     * Constante que define que el menu es visible desde app
-     */
-    const VISIBILIDAD_APP = 1;
+Load::lib("backend/menu_interface");
 
-    /**
-     * Constante que define que el menu es visible desde el backend
-     */
-    const VISIBILIDAD_BACKEND = 2;
-
-    /*
-     * Constante que define que el menu es visible desde cualquier lado
-     */
-    const VISIBILIDAD_TODAS = 3;
-
+class Menus extends ActiveRecord implements MenuInterface{
+    // public $debug = true;
+    // public $logger = true;
+   
     public function initialize() {
         $this->has_many('menus');
         //validaciones
@@ -66,13 +54,13 @@ class Menus extends ActiveRecord {
         return $this->find_all_by_sql("SELECT $select FROM $from $joins WHERE $condiciones GROUP BY $agrupar_por ORDER BY $orden");
     }
 
-    public function get_sub_menus($id_user, $entorno) {
+    public function get_sub_menus($id_user) {
         $campos = 'menus.' . join(',menus.', $this->fields) . ',r.recurso';
         $join = 'INNER JOIN recursos as r ON r.id = menus.recursos_id AND r.activo = 1 ';
         $join .= 'INNER JOIN roles_recursos as rr ON r.id = rr.recursos_id ';
         $join .= 'INNER JOIN roles_usuarios AS ru ON ru.usuarios_id = \'' . $id_user . "'";
         $condiciones = "menus.menus_id = '{$this->id}' AND menus.activo = 1 ";
-        $condiciones .= " AND visible_en IN ('3','$entorno') ";
+        //$condiciones .= " AND visible_en IN ('3','$entorno') ";
         $agrupar_por = 'menus.' . join(',menus.', $this->fields) . ',r.recurso';
         return $this->find($condiciones, "join: $join", "columns: $campos", 'order: menus.posicion', "group: $agrupar_por");
     }
@@ -86,6 +74,38 @@ class Menus extends ActiveRecord {
 
     public function before_save() {
         $this->posicion = !empty($this->posicion) ? $this->posicion : '100';
+    }
+
+    public function getItems($entorno){
+        return $this->obtener_menu_por_usuario(Auth::get('id'),$entorno);
+    }
+
+    public function getSubItems(){
+        return $this->get_sub_menus(Auth::get('id'));
+    }
+
+    public function getUrl(){
+        return $this->url;
+    }
+
+    public function getClasses(){
+        return $this->clases;
+    }
+
+    public function getTitle(){
+        return $this->nombre;
+    }
+
+    public function hasSubItems(){
+        $id_user = Auth::get('id');
+        $campos = 'menus.id';
+        $join = 'INNER JOIN recursos as r ON r.id = menus.recursos_id AND r.activo = 1 ';
+        $join .= 'INNER JOIN roles_recursos as rr ON r.id = rr.recursos_id ';
+        $join .= 'INNER JOIN roles_usuarios AS ru ON ru.usuarios_id = \'' . $id_user . "'";
+        $condiciones = "menus.menus_id = '{$this->id}' AND menus.activo = 1 ";
+        $agrupar_por = 'menus.id';
+        $sql = "SELECT $campos FROM $this->source $join WHERE $condiciones GROUP BY $agrupar_por";
+        return $this->count_by_sql("SELECT COUNT(*) FROM ($sql) as t");
     }
 
 }
