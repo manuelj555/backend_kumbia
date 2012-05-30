@@ -12,7 +12,7 @@ require_once CORE_PATH . 'kumbia/kumbia_view.php';
 class View extends KumbiaView {
 
     public static function renderMenu($entorno) {
-        if (MyAuth::es_valido()) {
+        if (MyAuth::estaLogueado()) {
             echo Menu::render(new Menus() ,$entorno);
         } else {
             return '';

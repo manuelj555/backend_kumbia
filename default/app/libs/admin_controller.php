@@ -15,8 +15,8 @@ class AdminController extends Controller
 
     final protected function initialize()
     {
-        if (MyAuth::es_valido()) {
-            return $this->_tienePermiso();
+        if (MyAuth::estaLogueado()) {
+            return $this->_tienePermiso(new MyAcl());
         } elseif (Input::hasPost('login') && Input::hasPost('clave')) {
             return $this->_logueoValido(Input::post('login'), Input::post('clave'));
         } elseif (MyAuth::cookiesActivas()) {
@@ -28,10 +28,9 @@ class AdminController extends Controller
         }
     }
 
-    protected function _tienePermiso()
+    protected function _tienePermiso(AclInterface $acl)
     {
         View::template('backend/backend');
-        $acl = new MyAcl();
         if (!$acl->check()) {
             if ($acl->limiteDeIntentosPasado()) {
                 $acl->resetearIntentos();
@@ -50,7 +49,7 @@ class AdminController extends Controller
     {
         if (MyAuth::autenticar($user, $pass, $encriptar)) {
             Flash::info('Bienvenido al Sistema <b>' . h(Auth::get('nombres')) . '</b>');
-            return $this->_tienePermiso();
+            return $this->_tienePermiso(new MyAcl());
         } else {
             Input::delete();
             Flash::warning('Datos de Acceso invalidos');
@@ -61,13 +60,13 @@ class AdminController extends Controller
 
     public function logout()
     {
-        MyAuth::cerrar_sesion();
+        MyAuth::cerrarSesion();
         return Router::redirect('/');
     }
 
     protected function intentos_pasados()
     {
-        MyAuth::cerrar_sesion();
+        MyAuth::cerrarSesion();
         Flash::warning('Has Sobrepasado el limite de intentos fallidos al tratar acceder a ciertas partes del sistema');
         return Router::redirect('/');
     }

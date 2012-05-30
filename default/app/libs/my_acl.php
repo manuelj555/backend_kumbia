@@ -22,7 +22,10 @@
  * @license http://www.gnu.org/licenses/agpl.txt GNU AFFERO GENERAL PUBLIC LICENSE version 3.
  * @author Manuel José Aguirre Garcia <programador.manuel@gmail.com>
  */
-class MyAcl
+
+Load::lib('backend/acl_abstract');
+
+class MyAcl extends AclAbstract
 {
 
     /**
@@ -148,33 +151,6 @@ class MyAcl
         self::$_acl->check($recurso2, $usuario) ||
         self::$_acl->check($recurso3, $usuario) ||
         self::$_acl->check($recurso4, $usuario);
-    }
-
-    /**
-     * Verifica si un usuario a excedido el numero de intentos de entrar a un
-     * recursos consecutivamente sin tener permisos.
-     *
-     * @return boolean devuelve true si se ha sobrepasado el limite de intentos
-     */
-    public function limiteDeIntentosPasado()
-    {
-        if (Session::has('intentos_acceso')) {
-            $intentos = Session::get('intentos_acceso') + 1;
-            Session::set('intentos_acceso', $intentos);
-            $max_intentos = Config::get('config.application.intentos_acceso');
-            return $intentos >= $max_intentos;
-        } else {
-            Session::set('intentos_acceso', 0);
-        }
-        return false;
-    }
-
-    /**
-     * Reinicia el numero de intentos de un usuario por acceder a un recurso en cero.
-     */
-    public function resetearIntentos()
-    {
-        Session::set('intentos_acceso', 0);
     }
 
 }

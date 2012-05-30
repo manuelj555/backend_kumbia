@@ -22,9 +22,10 @@
  * @license http://www.gnu.org/licenses/agpl.txt GNU AFFERO GENERAL PUBLIC LICENSE version 3.
  * @author Manuel José Aguirre Garcia <programador.manuel@gmail.com>
  */
-Load::lib('backend/auth_abstract');
 
-class MyAuth extends AuthAbstract
+Load::lib('backend/auth_interface2');
+
+abstract class AuthAbstract implements AuthInterface2
 {
 
     /**
@@ -33,32 +34,37 @@ class MyAuth extends AuthAbstract
      */ 
     protected static $_clave_sesion = 'backend_kumbiaphp';
 
-    public static function autenticar($user, $pass, $encriptar = TRUE)
+    public static function hash($pass)
     {
-        $pass = $encriptar ? self::hash($pass) : $pass;
-        $auth = new Auth('class: usuarios',
-                        'login: ' . $user,
-                        'clave: ' . $pass,
-                        "activo: 1");
-        if ($auth->authenticate()) {
-            if (Input::post('recordar')) {
-                self::setCookies($user, $pass);
-            } else {
-                self::deleteCookies();
-            }
+        return crypt($pass, self::$_clave_sesion);
+    }
+
+    public static function cookiesActivas()
+    {
+        return isset($_COOKIE[md5(self::$_clave_sesion)]) && is_array(self::getCookies());
+    }
+
+    public static function setCookies($user, $pass)
+    {
+        setcookie(md5(self::$_clave_sesion), serialize(array(
+                    'login' => $user,
+                    'clave' => $pass
+                )), time() + 60 * 60 * 24 * 30);
+    }
+
+    public static function getCookies()
+    {
+        if (isset($_COOKIE[md5(self::$_clave_sesion)])) {
+            return unserialize($_COOKIE[md5(self::$_clave_sesion)]);
+        } else {
+            return NULL;
         }
-        return self::estaLogueado();
     }
 
-    public static function estaLogueado()
+    public static function deleteCookies()
     {
-        return Auth::is_valid();
-    }
-
-    public static function cerrarSesion()
-    {
-        Auth::destroy_identity();
-        self::deleteCookies();
+        setcookie(md5(self::$_clave_sesion),'',time()- 1);
+        unset($_COOKIE[md5(self::$_clave_sesion)]);
     }
 
 }
