@@ -185,6 +185,7 @@ class Usuarios extends ActiveRecord
                 $this->commit();
                 return TRUE;
             } else {
+                Flash::error("No se Pudo Mandar el Correo...!!!");
                 $this->rollback();
                 return FALSE;
             }
