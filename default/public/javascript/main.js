@@ -12,14 +12,14 @@ function login(){
 		'user':prompt('user', ''),
 		'pass': prompt('Password','')  }
 	jQuery.post('/rest/api/auth/token', data, function(data, textStatus, jqXHR){
-		console.info(data);
 		localStorage.setItem('token', data.token);
 		$.ajaxSetup({ 
 			headers : { "auth_token" : localStorage.getItem('token'),
 			'app_token': 'abcd'}
 		});
+		if(app)	app.load();
 	}, 'json').error(function(){
-		alert('Error');
+		app.msgbox('Error', 'Error de Login', 'error')
 	})
 }
 
