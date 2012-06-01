@@ -13,7 +13,7 @@
 // Carga el active record
 Load::coreLib('kumbia_active_record');
 
-class ActiveRecord extends KumbiaActiveRecord {
+class ActiveRecord extends KumbiaActiveRecord implements ArrayAccess {
 
 //    public $debug = true;
 //    public $logger = true;
@@ -87,6 +87,24 @@ class ActiveRecord extends KumbiaActiveRecord {
                 Acciones::add($this->db->last_sql_query(), $tabla);
             }
         }
+    }
+
+    public function offsetSet($indice, $valor) {
+        if (!is_null($indice)) {
+            $this->{$indice} = $valor;
+        }
+    }
+
+    public function offsetExists($indice) {
+        return isset($this->{$indice});
+    }
+
+    public function offsetUnset($indice) {
+        //no se pueden quitar atributos.
+    }
+
+    public function offsetGet($indice) {
+        return $this->offsetExists($indice) ? $this->{$indice} : NULL;
     }
 
 }
