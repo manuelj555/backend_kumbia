@@ -29,7 +29,7 @@ class AuditoriasController extends AdminController {
         try {
             Session::delete('filtro_auditorias_usuario');
             $usr = new Usuarios();
-            $this->usuarios = $usr->obtener_usuarios_con_num_acciones($pag);
+            $this->usuarios = $usr->numAcciones($pag);
         } catch (KumbiaException $e) {
             View::excepcion($e);
         }
@@ -40,13 +40,13 @@ class AuditoriasController extends AdminController {
         try {
             $usr = new Usuarios();
             $aud = new Auditorias();
-            $this->auditorias = $aud->auditorias_por_usuario($id, $pagina);
+            $this->usuario = $usr->find_first($id);
+            $this->auditorias = $aud->porUsuario($usr,new Filtro(), $pagina);
             if (!$this->auditorias->items) {
                 Flash::info('Este usuario no ha realizado ninguna acción en el sistema...!!!');
                 return Router::redirect();
             }
-            $this->usuario = $usr->find_first($id);
-            $this->tablas_afectadas = $aud->tablas_afectadas();
+            $this->tablas_afectadas = $aud->tablasAfectadas();
         } catch (KumbiaException $e) {
             View::excepcion($e);
         }
@@ -61,9 +61,10 @@ class AuditoriasController extends AdminController {
             $usr = new Usuarios();
             $aud = new Auditorias();
             $this->usuario = $usr->find_first($id);
-            $this->tablas_afectadas = $aud->tablas_afectadas();
+            $this->tablas_afectadas = $aud->tablasAfectadas();
             $this->filtro = Session::get('filtro_auditorias_usuario');
-            $this->auditorias = $aud->auditorias_por_usuario($id, $pagina, $this->filtro);
+            $filtro = new Filtro($aud->get_source(), $this->filtro);
+            $this->auditorias = $aud->porUsuario($usr,$filtro ,$pagina);
         } catch (KumbiaException $e) {
             View::excepcion($e);
         }

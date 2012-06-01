@@ -20,8 +20,14 @@ class Correos {
         $this->_mail->FromName = "Manuel Aguirre";
     }
 
-    public function enviarRegistro($data) {
-        $mensaje = "Felicidades tu cuenta en " . Config::get('config.application.name');
+    /**
+     * Envia un correo de registro exitoso al usuario.
+     * 
+     * @param  Usuarios $usuario 
+     * @return boolean        
+     */
+    public function enviarRegistro(Usuarios $usuario) {
+        /*$mensaje = "Felicidades tu cuenta en " . Config::get('config.application.name');
         $mensaje .= " ha sido creada Exitosamente...!!! ";
         $mensaje .= "<ul><li>Usuario: " . h($data['login']) . "</li>";
         $mensaje .= "<li>Contraseña: " . h($data['clave']) . "</li></ul>";
@@ -34,6 +40,10 @@ class Correos {
         $this->_mail->IsHTML(TRUE);
 
         $this->_mail->AddAddress($data['email'], $data['nombres']);
+        return $this->_enviar();*/
+    }
+
+    protected function _enviar(){
         ob_start();
         $res = $this->_mail->Send();
         ob_clean();

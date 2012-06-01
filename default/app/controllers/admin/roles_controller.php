@@ -26,7 +26,7 @@ Load::models('roles');
 
 class RolesController extends AdminController {
 
-    protected function after_filter() {
+    protected function before_filter() {
         if (Input::isAjax()) {
             View::select(NULL, NULL);
         }

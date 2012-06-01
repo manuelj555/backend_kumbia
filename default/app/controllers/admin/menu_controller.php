@@ -26,7 +26,8 @@ Load::models('menus');
 
 class MenuController extends AdminController {
 
-    protected function after_filter() {
+
+    protected function before_filter() {
         if (Input::isAjax()) {
             View::select(NULL, NULL);
         }
@@ -82,7 +83,6 @@ class MenuController extends AdminController {
                         }
                     } else {
                         Flash::warning('No se Pudieron Guardar los Datos...!!!');
-                        unset($this->menu); //para que cargue el $_POST en el form
                     }
                 }
             } else {

@@ -22,11 +22,21 @@
  * @license http://www.gnu.org/licenses/agpl.txt GNU AFFERO GENERAL PUBLIC LICENSE version 3.
  * @author Manuel José Aguirre Garcia <programador.manuel@gmail.com>
  */
+
+/**
+ * Clase que obtiene los archivos controladores creados y sus acciones.
+ * 
+ */
 class LectorRecursos {
 
     public static $_controladores;
     public static $_recursos;
 
+    /**
+     * Obtiene los recursos que están creados en la app.
+     * 
+     * @return array 
+     */
     public static function obtenerRecursos() {
         self::$_controladores = array();
         self::$_recursos = array();
@@ -35,16 +45,38 @@ class LectorRecursos {
         return self::$_recursos;
     }
 
+    /**
+     * Obtiene los recuros y los pagina.
+     * 
+     * @param  integer $pagina    
+     * @param  integer $por_pagina 
+     * @return array             
+     */
     public static function recursosPaginados($pagina = 1, $por_pagina = 10) {
         return self::paginar(self::obtenerRecursos(), "page: $pagina", "per_page: $por_pagina");
     }
 
+    /**
+     * Pagina un array de recursos.
+     * 
+     * @param  array $recursos   
+     * @param  integer $pagina     
+     * @param  integer $por_pagina 
+     * @return array              
+     */
     public static function paginar($recursos, $pagina = 1, $por_pagina = 10) {
         require_once CORE_PATH . 'libs/kumbia_active_record/behaviors/paginate.php';
         self::obtenerRecursos();
         return Paginator::paginate($recursos, "page: $pagina", "per_page: $por_pagina");
     }
 
+    /**
+     * Escanea los directorios dentro de app/controllers/ para obtener los
+     * recursos. 
+     * 
+     * @param  string $modulo para buscar dentro de carpetas (modulos)
+     * @return array
+     */
     protected static function escanearDir($modulo = NUll) {
         $dir = APP_PATH . 'controllers' . ( $modulo ? "/$modulo" : '' );
         $res = @scandir($dir);
@@ -69,10 +101,15 @@ class LectorRecursos {
         }
     }
 
+    /**
+     * Escanea los controladores y obtiene sus metodos publicos.
+     * 
+     * @return array
+     */
     protected static function escanearControladores() {
         foreach (self::$_controladores as $e) {
             $modulo = $e['modulo'] ? $e['modulo'] . '/' : NULL;
-            LectorClases::leerDir($e['dir']);
+            LectorClases::leerArchivo($e['dir']);
             self::$_recursos[] = array(
                 'recurso' => "$modulo{$e['controlador']}/*",
                 'modulo' => $e['modulo'],

@@ -29,7 +29,7 @@ class Usuarios extends ActiveRecord
 
     const ROL_DEFECTO = 1;
 
-    public function initialize()
+    protected function initialize()
     {
         $min_clave = Config::get('config.application.minimo_clave');
         //$this->belongs_to('roles');
@@ -43,14 +43,10 @@ class Usuarios extends ActiveRecord
         $this->validates_presence_of('nombres', 'message: Debe escribir su <b>nombre completo</b>');
         $this->validates_presence_of('email', 'message: Debe escribir un <b>correo electronico</b>');
         $this->validates_email_in('email', 'message: Debe escribir un <b>correo electronico</b> válido');
-    }
-
-    public function before_validation_on_create()
-    {
         $this->validates_uniqueness_of('login', 'message: El <b>Login</b> ya está siendo utilizado');
     }
 
-    public function before_save()
+    protected function before_save()
     {
         if (isset($this->clave2) and $this->clave !== $this->clave2) {
             Flash::error('Las <b>CLaves</b> no Coinciden...!!!');
@@ -60,16 +56,18 @@ class Usuarios extends ActiveRecord
         }
     }
 
-    public function obtener_usuarios($pagina = 1)
+    /**
+     * Devuelve los usuarios de la bd Paginados.
+     * 
+     * @param  integer $pagina numero de pagina a mostrar
+     * @return array          resultado de la consulta
+     */
+    public function paginar($pagina = 1)
     {
-//        $cols = "usuarios.*";
-//        $join = "INNER JOIN roles_usuarios ru ON ru.usuarios_id = usuarios.id";
-//        $join .= " INNER JOIN roles r ON r.id = ru.roles_id";
-//        $group = "usuarios.id";
-        return $this->paginate("page: $pagina"); //, "columns: $cols", "join: $join", "group: $group");
+        return $this->paginate("page: $pagina");
     }
 
-    public function obtener_usuarios_con_num_acciones($pagina = 1)
+    public function numAcciones($pagina = 1)
     {
         $cols = "usuarios.*,COUNT(auditorias.id) as num_acciones";
         //$join = "INNER JOIN roles ON roles.id = usuarios.roles_id ";
@@ -83,12 +81,14 @@ class Usuarios extends ActiveRecord
         //return $this->paginate("page: $pagina", "columns: $cols", "join: $join", "group: $group");
     }
 
-    public function cambiar_clave($datos)
+    /**
+     * Realiza un cambio de clave de usuario.
+     * 
+     * @param  array $datos datos del formulario
+     * @return boolean devuelve verdadero si se realizó el update
+     */
+    public function cambiarClave(array $datos)
     {
-//        if (MyAuth::hash($datos['clave_actual']) != $this->clave) {
-//            Flash::error('Las <b>CLave Actual</b> es Incorrecta...!!!');
-//            return false;
-//        }
         $this->clave = $datos['nueva_clave'];
         $this->clave2 = $datos['nueva_clave2'];
         return $this->update();
@@ -106,6 +106,7 @@ class Usuarios extends ActiveRecord
         $this->begin();
 
         if (!$this->save($data)) {
+            $this->rollback();
             return FALSE;
         }
 
@@ -136,6 +137,12 @@ class Usuarios extends ActiveRecord
         return TRUE;
     }
 
+    /**
+     * Crea un arreglo con pares idRol => nombreRol con los roles
+     * que posee el usuario.
+     * 
+     * @return array
+     */
     public function rolesUserIds()
     {
         $roles_id = array();
@@ -149,6 +156,10 @@ class Usuarios extends ActiveRecord
         return $roles_id;
     }
 
+    /**
+     * Obtiene un arreglo con los nombres de los roles que posee el usuario.
+     * @return array
+     */
     public function getRolesNames()
     {
         $res = Load::model('roles')->distinct('rol',
@@ -156,6 +167,10 @@ class Usuarios extends ActiveRecord
         return join(', ', $res);
     }
 
+    /**
+     * Realiza el proceso de registro de un usuario desde el frontend.
+     * @return boolean true si la operación fué exitosa.
+     */
     public function registrar()
     {
         $this->activo = 0; //por defecto las cuentas están desactivadas
@@ -166,17 +181,11 @@ class Usuarios extends ActiveRecord
         if ($this->save() && Load::model('roles_usuarios')->asignarRol($this->id, self::ROL_DEFECTO)) {
             $hash = md5($this->login . $this->id . $this->clave);
             $correo = Load::model('correos');
-            if ($correo->enviarRegistro(array(
-                        'id' => $this->id,
-                        'login' => $this->login,
-                        'clave' => $clave,
-                        'email' => $this->email,
-                        'nombres' => $this->nombres,
-                        'hash' => $hash,
-                    ))) {
+            if ($correo->enviarRegistro($this)) {
                 $this->commit();
                 return TRUE;
             } else {
+                Flash::error("No se Pudo Mandar el Correo...!!!");
                 $this->rollback();
                 return FALSE;
             }
@@ -208,6 +217,15 @@ class Usuarios extends ActiveRecord
         return FALSE;
     }
 
+    /**
+     * Obtiene la plantilla a usar por el usuario.
+     * 
+     * Devuelve la plantilla del usuario ( que tenga plantilla asignada )
+     * que tenga la mayor cantidad de privilegios.
+     * 
+     * @param  array $roles_id array con los ids de los roles.
+     * @return string           plantilla a usar.
+     */
     public function obtenerPlantilla($roles_id)
     {
         $res = Load::model('roles')->find_by_sql('select plantilla,MAX(c)

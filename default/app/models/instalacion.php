@@ -42,6 +42,7 @@ class Instalacion
 
     public function guardarDatabases($pos_entorno, $data)
     {
+        $data = $data + array('charset' => 'utf8');
         Config::set("databases.{$this->entorno($pos_entorno)}", $data);
         return MyConfig::save('databases');
     }
@@ -67,36 +68,6 @@ class Instalacion
         }
         return $tablas_existentes;
     }
-
-    /*public function listarTablasPorCrear()
-    {
-        require_once APP_PATH . 'config/sql/bd.php';
-        return array_keys(getEsquema());
-    }*/
-
-    /*public function crearTablas($tablas)
-    {
-        require_once APP_PATH . 'config/sql/bd.php';
-        $esquema = getEsquema();
-        $exito = TRUE;
-        $db = Db::factory();
-        foreach ($tablas as $key => $valor) {
-            $db->drop_table($valor);
-            if ($db->create_table($valor, $esquema[$valor])) {
-                $data_tabla = getDataTable($valor);
-                if ($data_tabla) {
-                    if (!$db->query(getDataTable($valor))) {
-                        Flash::error("No se pudieron crear los registros inicales para la tabla <b>$valor</b>");
-                        $exito = FALSE;
-                    }
-                }
-            } else {
-                Flash::error("No se pudo crear la tabla <b>$valor</b>");
-                $exito = FALSE;
-            }
-        }
-        return $exito;
-    }*/
 
     public function verificarConexion()
     {

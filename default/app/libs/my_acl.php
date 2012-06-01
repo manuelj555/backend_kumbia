@@ -44,6 +44,9 @@ class MyAcl
      */
     protected $_recurso_actual = NULL;
 
+    /**
+     * Crea las reglas para el ACL.
+     */
     public function __construct()
     {
 
@@ -61,6 +64,7 @@ class MyAcl
     }
 
     /**
+     * Establece los roles del usuario en el ACL
      *
      * @param <type> $roles resultado de una consulta del ActiveRecord
      * @return array arreglo con los ids de los roles a los que pertenece el usuario actual conectado

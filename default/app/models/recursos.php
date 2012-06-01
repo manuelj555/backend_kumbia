@@ -26,16 +26,19 @@ class Recursos extends ActiveRecord {
 
 //    public $debug = true;
 
-    public function initialize() {
+    protected function initialize() {
         //validaciones
         $this->validates_presence_of('controlador', 'message: Debe escribir un <b>Controlador</b>');
         $this->validates_presence_of('descripcion', 'message: Debe escribir una <b>Descripción</b>');
-    }
-
-    public function before_validation_on_create() {
         $this->validates_uniqueness_of('recurso', 'message: Este Recurso <b>ya existe</b> en el sistema');
     }
 
+    /**
+     * Obtiene los recursos a los que un rol tiene acceso.
+     * 
+     * @param  int $id_rol 
+     * @return array         
+     */
     public function obtener_recursos_por_rol($id_rol) {
         $cols = 'recursos.recurso';
         $joins = 'INNER JOIN roles_recursos as r ON r.recursos_id = recursos.id';
@@ -43,7 +46,7 @@ class Recursos extends ActiveRecord {
         return $this->find("columns: $cols", "join: $joins", "$where");
     }
 
-    public function before_validation() {
+    protected function before_validation() {
         if (empty($this->recurso)) {
             $this->recurso = !empty($this->modulo) ? "$this->modulo/" : '';
             $this->recurso .= "$this->controlador/";
@@ -51,6 +54,12 @@ class Recursos extends ActiveRecord {
         }
     }
 
+    /**
+     * Obtiene los recursos que no se han agregado al al bd.
+     * 
+     * @param  integer $pagina 
+     * @return array          
+     */
     public function obtener_recursos_nuevos($pagina = 1) {
         $recursos = LectorRecursos::obtenerRecursos();
         foreach ($recursos as $index => $re) {
@@ -64,6 +73,12 @@ class Recursos extends ActiveRecord {
         return $recursos;
     }
 
+    /**
+     * Guarda los recursos que aun no estan en bd y fueron seleccionados
+     * por el usuario.
+     * 
+     * @return boolean 
+     */
     public function guardar_nuevos() {
         $recursos_a_guardar = array();
         $recursos_chequeados = Input::post('check');
@@ -82,7 +97,7 @@ class Recursos extends ActiveRecord {
                 $recursos_a_guardar[] = $data;
             }
         } else {
-            return false;
+            return FALSE;
         }
         $this->begin();
         foreach ($recursos_a_guardar as $e) {
@@ -95,6 +110,11 @@ class Recursos extends ActiveRecord {
         return TRUE;
     }
 
+    /**
+     * Obtiene las acciones existentes por cada controlador.
+     * 
+     * @return array 
+     */
     public function accionesPorControlador(){
         $res = $this->find("modulo = '$this->modulo' AND controlador = '$this->controlador' AND accion != ''",
                 'columns: id,accion');
