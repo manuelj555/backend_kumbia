@@ -50,6 +50,13 @@ class Menus extends ActiveRecord {
         $this->validates_uniqueness_of('nombre', 'message: Ya hay un menu con el <b>mismo Nombre</b>');
     }
 
+    /**
+     * Devuelve el menu para un usuario.
+     * 
+     * @param  int $id_user 
+     * @param  int $entorno 
+     * @return array          
+     */
     public function obtener_menu_por_usuario($id_user, $entorno) {
         $select = 'm.' . join(',m.', $this->fields) . ',re.recurso';
         $from = 'menus as m';
@@ -63,6 +70,13 @@ class Menus extends ActiveRecord {
         return $this->find_all_by_sql("SELECT $select FROM $from $joins WHERE $condiciones GROUP BY $agrupar_por ORDER BY $orden");
     }
 
+    /**
+     * Obtiene los items asociados a un item padre.
+     * 
+     * @param  int $id_user 
+     * @param  int $entorno 
+     * @return array          
+     */
     public function get_sub_menus($id_user, $entorno) {
         $campos = 'menus.' . join(',menus.', $this->fields) . ',r.recurso';
         $join = 'INNER JOIN recursos as r ON r.id = menus.recursos_id AND r.activo = 1 ';
@@ -74,6 +88,12 @@ class Menus extends ActiveRecord {
         return $this->find($condiciones, "join: $join", "columns: $campos", 'order: menus.posicion', "group: $agrupar_por");
     }
 
+    /**
+     * Devuelve los menus de la bd paginados
+     * 
+     *@param  int $pagina       
+     * @return array
+     */
     public function menus_paginados($pagina) {
         $cols = 'menus.' . join(',menus.', $this->fields) . ",r.recurso,m2.nombre as padre";
         $joins = 'INNER JOIN recursos as r ON r.id = recursos_id ';

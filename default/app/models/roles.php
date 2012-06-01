@@ -36,6 +36,11 @@ class Roles extends ActiveRecord {
         
     }
 
+    /**
+     * Devuelve los recursos a los que un rol tiene acceso.
+     * 
+     * @return array 
+     */
     public function getRecursos(){
         $columnas = "r.*";
         $join = "INNER JOIN roles_recursos as rr ON rr.roles_id = roles.id ";

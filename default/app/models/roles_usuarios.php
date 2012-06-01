@@ -31,9 +31,15 @@ class RolesUsuarios extends ActiveRecord {
         $this->belongs_to('roles');
     }
 
-    public function asignarRol($id_user, $id_rol){
+    /**
+     * Crea una asociación Usuario, Rol
+     * @param  int $usuario id usuario
+     * @param  int    $rol     id rol
+     * @return boolean  
+     */
+    public function asignarRol($id_usuario,$id_rol){
         return ($this->create(array(
-            'usuarios_id' => $id_user,
+            'usuarios_id' => $id_usuario,
             'roles_id' => $id_rol,
         )));
     }
