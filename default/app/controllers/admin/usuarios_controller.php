@@ -35,12 +35,16 @@ class UsuariosController extends AdminController {
     public function index($pagina = 1) {
         try {
             $usr = new Usuarios();
-            $this->usuarios = $usr->obtener_usuarios($pagina);
+            $this->usuarios = $usr->paginar($pagina);
         } catch (KumbiaException $e) {
             View::excepcion($e);
         }
     }
 
+    /**
+     * Cambio de los datos personales de usuario.
+     * 
+     */
     public function perfil() {
         try {
             $usr = new Usuarios();
@@ -61,13 +65,20 @@ class UsuariosController extends AdminController {
         }
     }
 
+    /**
+     * Crea un usuario desde el backend.
+     */
     public function crear() {
         try {
-
+            //obtenemos los usuarios activos para listarlos en el form
+            //ya que al crear un user se deben especificar los roles que poseerá
             $this->roles = Load::model('roles')->find_all_by_activo(1);
 
             if (Input::hasPost('usuario')) {
-                $usr = new Usuarios(Input::post('usuario')); //esto es para tener atributos que no son campos de la tabla
+                //esto es para tener atributos que no son campos de la tabla
+                $usr = new Usuarios(Input::post('usuario')); 
+                //guarda los datos del usuario, y le asigna los roles 
+                //seleccionados en el formulario.
                 if ($usr->guardar(Input::post('usuario'), Input::post('rolesUser'))) {
                     Flash::valid('El Usuario Ha Sido Agregado Exitosamente...!!!');
                     if (!Input::isAjax()) {
@@ -82,6 +93,10 @@ class UsuariosController extends AdminController {
         }
     }
 
+    /**
+     * Edita los datos de un usuario desde el backend.
+     * @param  int $id id del usuario a editar
+     */
     public function editar($id) {
         try {
 
@@ -92,12 +107,18 @@ class UsuariosController extends AdminController {
             $this->usuario = $usr->find_first($id);
 
             if ($this->usuario) {// verificamos la existencia del usuario
+
+                //obtenemos los roles que tiene el usuario
+                //para mostrar los checks seleccionados para estos roles.
                 $this->rolesUser = $usr->rolesUserIds();
 
+                //obtenemos los roles con los que se crearán los checks.
                 $this->roles = Load::model('roles')->find_all_by_activo(1);
 
                 if (Input::hasPost('usuario')) {
 
+                    //guarda los datos del usuario, y le asigna los roles 
+                    //seleccionados en el formulario.
                     if ($usr->guardar(Input::post('usuario'), Input::post('rolesUser'))) {
                         Flash::valid('El Usuario Ha Sido Actualizado Exitosamente...!!!');
                         if (!Input::isAjax()) {
@@ -118,6 +139,10 @@ class UsuariosController extends AdminController {
         }
     }
 
+    /**
+     * Activa un usuario desde el backend
+     * @param  int $id id del usuario a activar
+     */
     public function activar($id) {
         try {
             $id = (int) $id;
@@ -135,6 +160,10 @@ class UsuariosController extends AdminController {
         return Router::toAction('');
     }
 
+    /**
+     * Desactiva un usuario desde el backend
+     * @param  int $id id del usuario a desactivar
+     */
     public function desactivar($id) {
         try {
             $id = (int) $id;
