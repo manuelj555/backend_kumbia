@@ -26,7 +26,8 @@ Load::models('menus');
 
 class MenuController extends AdminController {
 
-    protected function after_filter() {
+
+    protected function before_filter() {
         if (Input::isAjax()) {
             View::select(NULL, NULL);
         }
