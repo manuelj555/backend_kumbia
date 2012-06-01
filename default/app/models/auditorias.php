@@ -31,34 +31,26 @@ class Auditorias extends ActiveRecord {
         $this->belongs_to('usuarios');
     }
 
-    public function crear_filtro($filtro) {
-        $condiciones = array();
-        if (!empty($filtro['tabla_afectada'])) {
-
-            $condiciones[] = "tabla_afectada LIKE '%{$filtro['tabla_afectada']}%'";
-        }
-        if (!empty($filtro['fecha_at'])) {
-            $filtro['fecha_at'] = date('Y-m-d', strtotime($filtro['fecha_at']));
-            $condiciones[] = "fecha_at LIKE '%{$filtro['fecha_at']}%'";
-        }
-        if (!empty($filtro['accion_realizada'])) {
-
-            $condiciones[] = "accion_realizada LIKE '%{$filtro['accion_realizada']}%'";
-        }
-        return sizeof($condiciones) ? join(' AND ', $condiciones) : 'TRUE';
-    }
-
-    public function auditorias_por_usuario($id_usuario, $pagina = 1, $filtro = NULL) {
-        $condiciones = 'TRUE';
-        if ($filtro) {
-            $condiciones = $this->crear_filtro($filtro);
-        }
-        $id_usuario = Filter::get($id_usuario, 'int');
-        $where = "usuarios_id = '{$id_usuario}' AND {$condiciones}";
+    /**
+     * Obtiene las acciones realizadas por un usuario especifico
+     * 
+     * @param  Usuarios $usuario usuario que se auditará
+     * @param  Filtro   $filtro  filtro de auditorias
+     * @param  integer  $pagina  pagina a mostrar
+     * @return array        registros en la bd
+     */
+    public function porUsuario(Usuarios $usuario, Filtro $filtro,$pagina = 1) {
+        $condiciones = $filtro->getQuery();
+        $where = "usuarios_id = '{$usuario->id}' AND {$condiciones}";
         return $this->paginate("page: $pagina", "conditions: $where", "order: id desc");
     }
 
-    public function tablas_afectadas() {
+    /**
+     * Devuelve las tablas que han sido afectadas en data por los usuarios.
+     * 
+     * @return array nombres de las tablas.
+     */
+    public function tablasAfectadas() {
         $tablas = array('Seleccione');
         foreach ($this->distinct('tabla_afectada') as $e) {
             $tablas["$e"] = $e;
