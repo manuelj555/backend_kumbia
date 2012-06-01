@@ -47,9 +47,6 @@ class Menus extends ActiveRecord {
         $this->validates_presence_of('recursos_id', 'message: Debe seleccionar un <b>Recurso</b> al cual se va acceder');
         $this->validates_presence_of('nombre', 'message: Debe escribir el <b>Texto a Mostrar</b> en el menu');
         $this->validates_presence_of('url', 'message: Debe escribir la <b>URL</b> en el menu');
-    }
-
-    protected function before_validation_on_create() {
         $this->validates_uniqueness_of('nombre', 'message: Ya hay un menu con el <b>mismo Nombre</b>');
     }
 

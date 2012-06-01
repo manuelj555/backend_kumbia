@@ -26,7 +26,7 @@ class Auditorias extends ActiveRecord {
 
 //    public $debug = true;
 
-    public function initialize() {
+    protected function initialize() {
         //relaciones
         $this->belongs_to('usuarios');
     }
