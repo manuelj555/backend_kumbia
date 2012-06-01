@@ -83,7 +83,6 @@ class MenuController extends AdminController {
                         }
                     } else {
                         Flash::warning('No se Pudieron Guardar los Datos...!!!');
-                        unset($this->menu); //para que cargue el $_POST en el form
                     }
                 }
             } else {
