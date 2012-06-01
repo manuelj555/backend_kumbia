@@ -24,6 +24,9 @@
  */
 Load::models('menus');
 
+/**
+ * Crea el html para los menus de la app.
+ */
 class Menu {
     /**
      * Constante que define que solo va a mostrar los
@@ -44,6 +47,13 @@ class Menu {
      */
     protected static $_id_user = NULL;
 
+    /**
+     * Crea los menus para la app.
+     * 
+     * @param  int $id_user 
+     * @param  int $entorno 
+     * @return string          
+     */
     public static function render($id_user, $entorno = self::BACKEND) {
         self::$_id_user = $id_user;
         $rL = new Menus();
@@ -59,6 +69,13 @@ class Menu {
         return $html;
     }
 
+    /**
+     * Genera los items del menu.
+     * 
+     * @param  Model $objeto_menu 
+     * @param  int $entorno     
+     * @return string              
+     */
     protected static function generarItems($objeto_menu, $entorno) {
         $sub_menu = $objeto_menu->get_sub_menus(self::$_id_user, $entorno);
         $class = 'menu_' . str_replace('/', '_', $objeto_menu->url);
@@ -82,6 +99,12 @@ class Menu {
         return $html . "</li>" . PHP_EOL;
     }
 
+    /**
+     * Verifica si el item es el de la url donde nos encontramos.
+     * 
+     * @param  string $url 
+     * @return boolean      
+     */
     protected static function es_activa($url) {
         $url_actual = substr(Router::get('route'), 1);
         return (strpos($url, $url_actual) !== false || strpos($url, "$url_actual/index") !== false);

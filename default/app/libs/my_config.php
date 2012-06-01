@@ -25,6 +25,12 @@
 class MyConfig
 {
 
+    /**
+     * Actualiza la configuracion de los archivos .ini de la app.
+     * 
+     * @param  [type] $file [description]
+     * @return [type]       [description]
+     */
     public static function save($file)
     {
         $html = PHP_EOL;

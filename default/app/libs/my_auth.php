@@ -31,6 +31,13 @@ class MyAuth
      */ 
     protected static $_clave_sesion = 'backend_kumbiaphp';
 
+    /**
+     * Realiza el proceso de autenticación de un usuario en el sistema.
+     * @param  string  $user      
+     * @param  string  $pass      
+     * @param  boolean $encriptar 
+     * @return boolean             
+     */
     public static function autenticar($user, $pass, $encriptar = TRUE)
     {
         $pass = $encriptar ? self::hash($pass) : $pass;
@@ -48,27 +55,55 @@ class MyAuth
         return self::es_valido();
     }
 
+    /**
+     * Verifica que un usuario haya iniciado sesion en la app.
+     * 
+     * @return boolean
+     */
     public static function es_valido()
     {
         return Auth::is_valid();
     }
 
+    /**
+     * Cierra la sesion de un usuario en la app.
+     * 
+     */
     public static function cerrar_sesion()
     {
         Auth::destroy_identity();
         self::deleteCookies();
     }
 
+    /**
+     * Crea una encriptacion de la clave para el usuario.
+     * 
+     * Usada para la verificación al loguear y cuando se crea un user en la bd.
+     * 
+     * @param  string $pass 
+     * @return string       
+     */
     public static function hash($pass)
     {
         return crypt($pass, self::$_clave_sesion);
     }
 
+    /**
+     * Verfica si existen cookies para un usuario.
+     * 
+     * @return boolean
+     */
     public static function cookiesActivas()
     {
         return isset($_COOKIE[md5(self::$_clave_sesion)]) && is_array(self::getCookies());
     }
 
+    /**
+     * Establece las cookies para un user.
+     * 
+     * @param string $user 
+     * @param string $pass 
+     */     
     public static function setCookies($user, $pass)
     {
         setcookie(md5(self::$_clave_sesion), serialize(array(
@@ -77,6 +112,11 @@ class MyAuth
                 )), time() + 60 * 60 * 24 * 30);
     }
 
+    /**
+     * Obtiene las cookies de un usuario.
+     * 
+     * @return array|NULL
+     */
     public static function getCookies()
     {
         if (isset($_COOKIE[md5(self::$_clave_sesion)])) {
@@ -86,6 +126,9 @@ class MyAuth
         }
     }
 
+    /**
+     * Elimina los cookies que un usuario tenga guardadas.
+     */
     public static function deleteCookies()
     {
         setcookie(md5(self::$_clave_sesion),'',time()- 1);

@@ -22,8 +22,9 @@
  * @license http://www.gnu.org/licenses/agpl.txt GNU AFFERO GENERAL PUBLIC LICENSE version 3.
  * @author Manuel José Aguirre Garcia <programador.manuel@gmail.com>
  */
-Load::models('auditorias');
-
+/**
+ * Lee clases en archivos php , y obtiene los metodos definidos en las mismas.
+ */
 class LectorClases {
 
     protected static $_clase = NULL;
@@ -32,7 +33,13 @@ class LectorClases {
     protected static $_metodos_privados = array();
     private static $_archivo = NULL;
 
-    public static function leerDir($dir) {
+    /**
+     * Lee un archivo php y obtiene la clase y los metodos definidos en el mismo.
+     * 
+     * @param  string $dir archivo a escanear
+     * @return array
+     */
+    public static function leerArchivo($dir) {
         if (!file_exists($dir))
             throw new KumbiaException('No existe el archivo en el directorio ' . $dir);
         self::$_archivo = file_get_contents($dir);
@@ -46,45 +53,78 @@ class LectorClases {
         return self::getEstructuraCompleta();
     }
 
+    /**
+     * Obtiene el nombre de la clase
+     * 
+     */
     protected static function obtenerClase() {
         preg_match('/class\s+?(.+?)\s/', self::$_archivo, $array);
         self::$_clase = $array[1];
     }
 
+    /**
+     * Obtiene los metodos publicos de la clase
+     */
     protected static function obtenerMetodosPublicos() {
         if (preg_match_all('/function\s+?(.+?)\(/', self::$_archivo, $array)) {
             self::$_metodos_publicos = $array[1];
         }
     }
 
+    /**
+     * Obtiene los metodos protegidos de la clase.
+     */
     protected static function obtenerMetodosProtegidos() {
         if (preg_match_all('/protected\s+?function\s+?(.+?)\(/', self::$_archivo, $array)) {
             self::$_metodos_protegidos = $array[1];
         }
     }
 
+    /**
+     * Obtiene los metodos privados de la clase.
+     */
     protected static function obtenerMetodosPrivados() {
         if (preg_match_all('/private\s+?function\s+?(.+?)\(/', self::$_archivo, $array)) {
             self::$_metodos_privados = $array[1];
         }
     }
 
+    /**
+     * Devuelve el nombre de la clase.
+     * @return string
+     */
     public static function getClase() {
         return self::$_clase;
     }
 
+    /**
+     * devuelve los metodos publicos de la clase
+     * @return array
+     */
     public static function getMetodosPublicos() {
         return self::$_metodos_publicos;
     }
 
+    /**
+     * devuelve los metodos protegidos de la clase
+     * @return array
+     */
     public static function getMetodosProtegidos() {
         return self::$_metodos_protegidos;
     }
 
+    /**
+     * devuelve los metodos privados de la clase
+     * @return array
+     */
     public static function getMetodosPrivados() {
         return self::$_metodos_privados;
     }
 
+    /**
+     * Devuelve toda la data del controlador actual.
+     * @return array 
+     */
     public static function getEstructuraCompleta() {
         return array(
             'clase' => self::$_clase,

@@ -18,25 +18,65 @@ class ActiveRecord extends KumbiaActiveRecord {
 //    public $debug = true;
 //    public $logger = true;
 
-
+    /**
+     * Activa un registro en la tabla actual.
+     *
+     * @return boolean 
+     */
     public function activar() {
-        $this->activo = '1';
-        return $this->update();
+        if (isset($this->activo)){
+            $this->activo = '1';
+            return $this->update();            
+        }else{
+            Flash::error("La tabla <b>{$this->get_source()}</b> no tiene un campo <b>activo</b>");
+            return FALSE;
+        }
     }
 
+    /**
+     * Desactiva un registro en la tabla actual.
+     *
+     * @return boolean 
+     */
     public function desactivar() {
-        $this->activo = '0';
-        return $this->update();
+        if (isset($this->activo)){
+            $this->activo = '0';
+            return $this->update();            
+        }else{
+            Flash::error("La tabla <b>{$this->get_source()}</b> no tiene un campo <b>activo</b>");
+            return FALSE;
+        }
     }
 
+    /**
+     * Para llevar auditorias.
+     * 
+     * Es bueno que si se reescribe el metodo, se llame al parent, para 
+     * que no se deje de ejecutar el log.
+     * 
+     */
     protected function after_save() {
         $this->log();
     }
 
+    /**
+     * Para llevar auditorias.
+     * 
+     * Es bueno que si se reescribe el metodo, se llame al parent, para 
+     * que no se deje de ejecutar el log.
+     */
     protected function after_delete() {
         $this->log();
     }
 
+    /**
+     * LLeva un control de auditorias para los cambios que se hagan en la BD.
+     * 
+     * Registra las consultas que alteren la data de la bd.
+     * 
+     * Actualmente no funciona con los INSERT INTO.
+     * 
+     */
     protected function log() {
         if ($this->source != 'auditorias') { //mucho ojo con esto
             //solo debemos hacer el log si la tabla no es la de auditorias;
