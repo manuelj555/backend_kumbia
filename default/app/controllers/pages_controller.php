@@ -39,6 +39,7 @@ class PagesController extends AppController
 	
 	public function show()
 	{
+		View::template('bookshop');
 		View::select(implode('/', $this->parameters));
 	}
 }

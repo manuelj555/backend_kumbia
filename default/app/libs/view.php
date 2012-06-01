@@ -34,5 +34,23 @@ class View extends KumbiaView {
 	public function notFound(){
 		throw new KumbiaException(NULL, 'no_controller');
 	}
+	
+	static function jsTemplate($tpl){
+		ob_start();
+		parent::partial("client/$tpl");
+		$content = ob_get_clean();
+		return sprintf('<script type="txt/tpl" id="tpl-%s">%s</script>',
+			$tpl, $content);
+	}
+	
+	static function jsTpl(){
+		$out = array();
+		$a_tpl = func_get_args();
+		foreach($a_tpl as $tpl){
+			$out[] =  self::jsTemplate($tpl);
+		}
+		return implode($out);
+	}
+
 
 }
