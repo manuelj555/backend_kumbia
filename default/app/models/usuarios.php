@@ -29,7 +29,7 @@ class Usuarios extends ActiveRecord
 
     const ROL_DEFECTO = 1;
 
-    public function initialize()
+    protected function initialize()
     {
         $min_clave = Config::get('config.application.minimo_clave');
         //$this->belongs_to('roles');
@@ -43,14 +43,10 @@ class Usuarios extends ActiveRecord
         $this->validates_presence_of('nombres', 'message: Debe escribir su <b>nombre completo</b>');
         $this->validates_presence_of('email', 'message: Debe escribir un <b>correo electronico</b>');
         $this->validates_email_in('email', 'message: Debe escribir un <b>correo electronico</b> válido');
-    }
-
-    public function before_validation_on_create()
-    {
         $this->validates_uniqueness_of('login', 'message: El <b>Login</b> ya está siendo utilizado');
     }
 
-    public function before_save()
+    protected function before_save()
     {
         if (isset($this->clave2) and $this->clave !== $this->clave2) {
             Flash::error('Las <b>CLaves</b> no Coinciden...!!!');

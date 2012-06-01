@@ -41,7 +41,7 @@ class Menus extends ActiveRecord {
      */
     const VISIBILIDAD_TODAS = 3;
 
-    public function initialize() {
+    protected function initialize() {
         $this->has_many('menus');
         //validaciones
         $this->validates_presence_of('recursos_id', 'message: Debe seleccionar un <b>Recurso</b> al cual se va acceder');
@@ -49,7 +49,7 @@ class Menus extends ActiveRecord {
         $this->validates_presence_of('url', 'message: Debe escribir la <b>URL</b> en el menu');
     }
 
-    public function before_validation_on_create() {
+    protected function before_validation_on_create() {
         $this->validates_uniqueness_of('nombre', 'message: Ya hay un menu con el <b>mismo Nombre</b>');
     }
 
@@ -84,7 +84,7 @@ class Menus extends ActiveRecord {
         return $this->paginate("page: $pagina", "columns: $cols", "join: $joins");
     }
 
-    public function before_save() {
+    protected function before_save() {
         $this->posicion = !empty($this->posicion) ? $this->posicion : '100';
     }
 

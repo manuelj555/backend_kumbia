@@ -26,13 +26,10 @@ class Recursos extends ActiveRecord {
 
 //    public $debug = true;
 
-    public function initialize() {
+    protected function initialize() {
         //validaciones
         $this->validates_presence_of('controlador', 'message: Debe escribir un <b>Controlador</b>');
         $this->validates_presence_of('descripcion', 'message: Debe escribir una <b>Descripción</b>');
-    }
-
-    public function before_validation_on_create() {
         $this->validates_uniqueness_of('recurso', 'message: Este Recurso <b>ya existe</b> en el sistema');
     }
 
@@ -43,7 +40,7 @@ class Recursos extends ActiveRecord {
         return $this->find("columns: $cols", "join: $joins", "$where");
     }
 
-    public function before_validation() {
+    protected function before_validation() {
         if (empty($this->recurso)) {
             $this->recurso = !empty($this->modulo) ? "$this->modulo/" : '';
             $this->recurso .= "$this->controlador/";

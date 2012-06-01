@@ -26,7 +26,7 @@ class RolesRecursos extends ActiveRecord {
 
 //    public $debug = true;
 
-    public function initialize() {
+    protected function initialize() {
         $this->belongs_to('roles');
     }
 
