@@ -1,34 +1,3 @@
-if(localStorage.getItem('token')){
-	$.ajaxSetup({ 
-		headers : { "auth_token" : localStorage.getItem('token'),
-		'app_token': 'abcd'}
-	});
-}
-
-
-function login(){
-	var data = {
-		'app': 'Web Client',
-		'user':prompt('user', ''),
-		'pass': prompt('Password','')  }
-	jQuery.post('/rest/api/auth/token', data, function(data, textStatus, jqXHR){
-		localStorage.setItem('token', data.token);
-		$.ajaxSetup({ 
-			headers : { "auth_token" : localStorage.getItem('token'),
-			'app_token': 'abcd'}
-		});
-		if(app)	app.load();
-	}, 'json').error(function(){
-		app.msgbox('Error', 'Error de Login', 'error')
-	})
-}
-
-$.ajaxSetup({ 
-	statusCode: {
-		401: login
-	}
-});
-
 tpl = {
     // Hash of preloaded templates for the app
     templates: {},
@@ -279,4 +248,28 @@ var AppRouter = Backbone.Router.extend({
 tpl.load(['header', 'item', 'form', 'msg'], function() {
 	app = new AppRouter();
 	Backbone.history.start();
+	if(localStorage.getItem('token')){
+		$.ajaxSetup({ 
+			headers : { "auth_token" : localStorage.getItem('token'),
+			'app_token': 'abcd'}
+		});
+	}
+	function login(){
+		var data = {
+			'app': 'Web Client',
+			'user':prompt('user', ''),
+			'pass': prompt('Password','')
+		}
+		jQuery.post('/rest/api/auth/token', data, function(data, textStatus, jqXHR){
+			localStorage.setItem('token', data.token);
+		$.ajaxSetup({ 
+			headers : { "auth_token" : localStorage.getItem('token'),
+			'app_token': 'abcd'}
+		});
+			app.load();
+		}, 'json').error(function(){
+			app.msgbox('Error', 'Error de Login', 'error')
+		});
+	}
+	$.ajaxSetup({statusCode: {401: login}});
 });
