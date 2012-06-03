@@ -70,7 +70,7 @@ class AdminController extends Controller
      * @return boolean devuelve TRUE si tiene acceso a la acción.
      * 
      */ 
-    final protected function checkAuth(){
+    protected function checkAuth(){
         if (MyAuth::es_valido()) {
             return $this->_tienePermiso();
         } elseif (Input::hasPost('login') && Input::hasPost('clave')) {
