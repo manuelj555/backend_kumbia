@@ -26,7 +26,11 @@ Load::models('roles');
 
 class RolesController extends AdminController {
 
-    protected function before_filter() {
+    /**
+     * Luego de ejecutar las acciones, se verifica si la petición es ajax
+     * para no mostrar ni vista ni template.
+     */
+    protected function after_filter() {
         if (Input::isAjax()) {
             View::select(NULL, NULL);
         }
