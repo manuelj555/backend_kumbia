@@ -131,7 +131,7 @@ class MyAcl
         $accion = Router::get('action');
 
         if (isset($this->_templates["$usuario"])) {
-            if (file_exists(APP_PATH . 'views/_shared/templates' . $this->_templates["$usuario"])) {
+            if (file_exists(APP_PATH . 'views/_shared/templates/' . $this->_templates["$usuario"] . '.phtml')) {
                 View::template("{$this->_templates["$usuario"]}");
             } else {
                 Flash::error("No existe el template <b>{$this->_templates["$usuario"]}</b> El cual está siendo usado por el perfil actual");

@@ -74,7 +74,7 @@ ul.bienvenida li img{
     padding-left: 20px;
 }
 
-table input[type=checkbox], table img{
+table.table input[type=checkbox], table.table img{
     width: 20px;
     margin-right: 10px;
     margin-left: 20px;
