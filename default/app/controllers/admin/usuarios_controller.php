@@ -55,7 +55,7 @@ class UsuariosController extends AdminController {
                     $this->usuario1 = $usr;
                 }
             } else if (Input::hasPost('usuario2')) {
-                if ($usr->cambiar_clave(Input::post('usuario2'))) {
+                if ($usr->cambiarClave(Input::post('usuario2'))) {
                     Flash::valid('Clave Actualizada Correctamente');
                     $this->usuario1 = $usr;
                 }
