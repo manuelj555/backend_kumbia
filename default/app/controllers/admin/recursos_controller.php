@@ -26,7 +26,11 @@ Load::models('recursos');
 
 class RecursosController extends AdminController {
 
-    protected function before_filter() {
+    /**
+     * Luego de ejecutar las acciones, se verifica si la petición es ajax
+     * para no mostrar ni vista ni template.
+     */
+    protected function after_filter() {
         if (Input::isAjax()) {
             View::select(NULL, NULL);
         }
@@ -71,7 +75,7 @@ class RecursosController extends AdminController {
             $recurso = new Recursos();
             $this->recurso = $recurso->find_first($id);
 
-            if ($this->recurso) {//validamos la existencia del rol
+            if ($this->recurso) {//validamos la existencia del recurso.
                 if (Input::hasPost('recurso')) {
                     if ($recurso->update(Input::post('recurso'))) {
                         Flash::valid('El Recurso ha sido Actualizado Exitosamente...!!!');

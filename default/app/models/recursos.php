@@ -47,11 +47,9 @@ class Recursos extends ActiveRecord {
     }
 
     protected function before_validation() {
-        if (empty($this->recurso)) {
-            $this->recurso = !empty($this->modulo) ? "$this->modulo/" : '';
-            $this->recurso .= "$this->controlador/";
-            $this->recurso .= ! empty($this->accion) ? "$this->accion" : '*';
-        }
+        $this->recurso = !empty($this->modulo) ? "$this->modulo/" : '';
+        $this->recurso .= "$this->controlador/";
+        $this->recurso .= ! empty($this->accion) ? "$this->accion" : '*';
     }
 
     /**
