@@ -271,5 +271,5 @@ tpl.load(['header', 'item', 'form', 'msg'], function() {
 			app.msgbox('Error', 'Error de Login', 'error')
 		});
 	}
-	$.ajaxSetup({statusCode: {401: login}});
+	$.ajaxSetup({statusCode: {401: login, 403: function(){app.msgbox('No tiene permisos', 'error')}}});
 });
