@@ -1,0 +1,26 @@
+<?php 
+	echo View::jsTpl('header', 'item', 'form', 'msg');
+?>
+
+<div class="container-fluid">
+<div id="msgbox"></div>
+
+<div class="row">
+<div id="header" class="span12"></div>
+</div>
+
+<div class="row">
+	<div class="span4">
+		<ul id="list" class="nav nav-tabs nav-stacked"></ul>
+	</div>
+	 <div class="span8">
+		<div id="show"></div>
+	</div>
+</div>
+</div>
+<?php echo Tag::js('jquery/jquery.min');?>
+<?php echo Tag::js('underscore');?>
+<?php echo Tag::js('backbone');?>
+<?php echo Tag::js('bootstrap/bootstrap');?>
+<script  src="<?php echo PUBLIC_PATH ?>javascript/require.js" data-main="<?php echo PUBLIC_PATH ?>javascript/main.js"></script> 
+
