@@ -94,7 +94,7 @@ class InstalacionController extends AppController {
 
     public function quitar_instalacion() {
         Configuracion::leer();
-        Configuracion::set('routes', 'Off');
+        Configuracion::set('application', 'routes', 'Off');
         Configuracion::guardar();
         Router::redirect('/');
     }

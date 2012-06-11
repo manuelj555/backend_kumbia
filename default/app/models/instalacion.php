@@ -49,13 +49,14 @@ class Instalacion
 
     public function obtenerConfig()
     {
-        return Configuracion::leer();
+		$temp = Configuracion::leer();
+        return $temp['application'];
     }
 
     public function guardarConfig($data)
     {
         foreach ($data as $variable => $valor) {
-            Configuracion::set($variable, $valor);
+            Configuracion::set('application', $variable, $valor);
         }
         return Configuracion::guardar();
     }
