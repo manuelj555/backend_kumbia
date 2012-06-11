@@ -28,22 +28,21 @@ class Configuracion {
 
     public static function leer() {
         self::$_archivo_ini = APP_PATH . "config/config.ini";
-        self::$_configuracion = parse_ini_file(self::$_archivo_ini, FALSE);
-
-        foreach (self::$_configuracion as $variable => $valor) {
-            if ($valor == 1) {
-                self::$_configuracion[$variable] = 'On';
-            } elseif (empty($valor)) {
-                self::$_configuracion[$variable] = 'Off';
+        self::$_configuracion = parse_ini_file(self::$_archivo_ini, true);
+        foreach(self::$_configuracion as $key => $section){
+            foreach ($section as $variable => $valor) {
+                 if ($valor == 1) {
+                    self::$_configuracion[$key][$variable] = 'On';
+                } elseif (empty($valor)) {
+                    self::$_configuracion[$key][$variable] = 'Off';
+                }
             }
         }
-
         return self::$_configuracion;
-        //return self::$_configuracion = parse_ini_file(self::$_archivo_ini, FALSE, INI_SCANNER_RAW);
     }
 
-    public static function set($variable, $valor) {
-        self::$_configuracion["$variable"] = $valor;
+    public static function set($seccion, $variable, $valor) {
+        self::$_configuracion[$seccion]["$variable"] = $valor;
     }
 
     public static function guardar() {
@@ -72,15 +71,17 @@ class Configuracion {
 ; la metadata
 
 TEXTO;
-
-        $html .= "[application]" . PHP_EOL;
-        foreach (self::$_configuracion as $variable => $valor) {
-            if ( in_array($valor , array('On', 'Off')) || is_numeric($valor) ){
+        foreach(self::$_configuracion as $key => $section){
+            $html .= "[$key]" . PHP_EOL;
+            foreach ($section as $variable => $valor) {
+                if ( in_array($valor , array('On', 'Off')) || is_numeric($valor) ){
                     $html .= "$variable = $valor" . PHP_EOL;                    
                 }else{
                     $valor = h($valor);
                     $html .= "$variable = \"$valor\"" . PHP_EOL;                    
                 }
+                
+            }
         }
         return file_put_contents(self::$_archivo_ini, $html);
     }

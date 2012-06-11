@@ -44,6 +44,9 @@ class Usuarios extends ActiveRecord
         $this->validates_presence_of('email', 'message: Debe escribir un <b>correo electronico</b>');
         $this->validates_email_in('email', 'message: Debe escribir un <b>correo electronico</b> válido');
         $this->validates_uniqueness_of('login', 'message: El <b>Login</b> ya está siendo utilizado');
+        //Esto no estaba y se podía volver a crear usuario con email repertodp
+        $this->validates_uniqueness_of('email', 'message: El <b>Email</b> ya está siendo utilizado');
+
     }
 
     protected function before_save()
@@ -173,19 +176,20 @@ class Usuarios extends ActiveRecord
      */
     public function registrar()
     {
-        $this->activo = 0; //por defecto las cuentas están desactivadas
         $clave = $this->clave;
-
+        //por defecto las cuentas están desactivadas
+        //Revisar esto en la base de datos
+        $this->activo = '0'; 
         $this->begin(); //iniciamos una transaccion
 
         if ($this->save() && Load::model('roles_usuarios')->asignarRol($this->id, self::ROL_DEFECTO)) {
-            $hash = md5($this->login . $this->id . $this->clave);
+            $hash = sha1($this->login . $this->id . $this->clave);
             $correo = Load::model('correos');
-            if ($correo->enviarRegistro($this)) {
+            if ($correo->enviarRegistro($this, $clave, $hash)) {
                 $this->commit();
                 return TRUE;
             } else {
-                Flash::error("No se Pudo Mandar el Correo...!!!");
+                Flash::error($correo->getError());
                 $this->rollback();
                 return FALSE;
             }
@@ -196,9 +200,8 @@ class Usuarios extends ActiveRecord
     }
 
     /**
-     * Faltan revisar cosas acá, porque si ya un user se habia activado y
-     * algun admin lo bloquea, por el correo de gmail se puede volver a
-     * activar
+     * Si el estado es negativo es que ha sido bloqueado y no se puede 
+     * activar vía correo
      *
      * @param <type> $id_usuario
      * @param <type> $hash
@@ -207,7 +210,7 @@ class Usuarios extends ActiveRecord
     public function activarCuenta($id_usuario, $hash)
     {
         if ($this->find_first((int) $id_usuario)) { //verificamos la existencia del user
-            if (md5($this->login . $this->id . $this->clave) === $hash) {
+            if (sha1($this->login . $this->id . $this->clave) === $hash && $this->activo > -1 ){
                 $this->activo = 1;
                 if ($this->save()) {
                     return TRUE;
