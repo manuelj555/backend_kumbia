@@ -23,7 +23,11 @@
 */
 class IndexController extends AdminController {
 
-    public function index() {
+	public function index(){
+		
+	}
+	
+    public function config() {
         try {
             $temp = Configuracion::leer();
             $this->config = $temp['application'];
