@@ -1,0 +1,3 @@
+[submodule "default/app/libs/breadcrumb"]
+	path = default/app/libs/breadcrumb
+	url = https://github.com/iBet7o/Breadcrumb.git
