@@ -28,6 +28,8 @@ class Usuarios extends ActiveRecord
 //    public $debug = true;
 
     const ROL_DEFECTO = 1;
+    
+    const SALT = 'Esto es un Salt Para mejorar la Seguridad';
 
     protected function initialize()
     {
@@ -183,7 +185,7 @@ class Usuarios extends ActiveRecord
         $this->begin(); //iniciamos una transaccion
 
         if ($this->save() && Load::model('roles_usuarios')->asignarRol($this->id, self::ROL_DEFECTO)) {
-            $hash = sha1($this->login . $this->id . $this->clave);
+            $hash = sha1($this->login . $this->id . $this->clave . self::SALT );
             $correo = Load::model('correos');
             if ($correo->enviarRegistro($this, $clave, $hash)) {
                 $this->commit();
@@ -210,7 +212,9 @@ class Usuarios extends ActiveRecord
     public function activarCuenta($id_usuario, $hash)
     {
         if ($this->find_first((int) $id_usuario)) { //verificamos la existencia del user
-            if (sha1($this->login . $this->id . $this->clave) === $hash && $this->activo > -1 ){
+            //calculo de hash
+            $calc = sha1($this->login . $this->id . $this->clave . self::SALT );
+            if ($calc === $hash && $this->activo == '0' ){
                 $this->activo = 1;
                 if ($this->save()) {
                     return TRUE;

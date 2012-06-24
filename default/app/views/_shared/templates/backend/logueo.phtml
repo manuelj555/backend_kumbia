@@ -56,9 +56,9 @@
                     </div>
                     <div class="modal-footer">
                         <?php if(Config::get('config.application.registro')): ?>
-                            <?php echo Html::link('registro','Registrate') ?>
+                            <?php echo Html::link('registro','Registrate', 'class="btn"') ?>
                         <?php endif; ?>
-                        <?php echo Form::submit('Ingresar', 'class="btn btn-primary btn-large"') ?>
+                        <?php echo Form::submit('Ingresar', 'class="btn btn-primary"') ?>
                     </div>
                     <?php echo Form::close() ?>
                 </div>
