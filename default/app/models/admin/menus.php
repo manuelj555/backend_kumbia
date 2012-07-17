@@ -42,7 +42,7 @@ class Menus extends ActiveRecord {
     const VISIBILIDAD_TODAS = 3;
 
     protected function initialize() {
-        $this->has_many('menus');
+        $this->has_many('admin/menus');
         //validaciones
         $this->validates_presence_of('recursos_id', 'message: Debe seleccionar un <b>Recurso</b> al cual se va acceder');
         $this->validates_presence_of('nombre', 'message: Debe escribir el <b>Texto a Mostrar</b> en el menu');

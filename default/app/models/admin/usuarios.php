@@ -33,9 +33,9 @@ class Usuarios extends ActiveRecord
     {
         $min_clave = Config::get('config.application.minimo_clave');
         //$this->belongs_to('roles');
-        $this->has_many('auditorias');
-        $this->has_many('roles_usuarios');
-        $this->has_and_belongs_to_many('roles', 'model: roles', 'fk: roles_id', 'through: roles_usuarios', 'key: usuarios_id');
+        $this->has_many('admin/auditorias');
+        $this->has_many('admin/roles_usuarios');
+        $this->has_and_belongs_to_many('roles', 'model: admin/roles', 'fk: roles_id', 'through: admin/roles_usuarios', 'key: usuarios_id');
         $this->validates_presence_of('login', 'message: Debe escribir un <b>Login</b> para el Usuario');
         $this->validates_presence_of('clave', 'message: Debe escribir una <b>Contraseña</b>');
         $this->validates_length_of('clave', 50, $min_clave, "too_short: La Clave debe tener <b>Minimo {$min_clave} caracteres</b>");
@@ -113,7 +113,7 @@ class Usuarios extends ActiveRecord
             return FALSE;
         }
 
-        $rolUser = Load::model('roles_usuarios');
+        $rolUser = Load::model('admin/roles_usuarios');
 
         if (is_array($roles) && count($roles)) {
 
@@ -165,7 +165,7 @@ class Usuarios extends ActiveRecord
      */
     public function getRolesNames()
     {
-        $res = Load::model('roles')->distinct('rol',
+        $res = Load::model('admin/roles')->distinct('rol',
                         "join: INNER JOIN roles_usuarios ru ON ru.roles_id = roles.id AND ru.usuarios_id = '$this->id'");
         return join(', ', $res);
     }
@@ -182,9 +182,9 @@ class Usuarios extends ActiveRecord
         $this->activo = '0'; 
         $this->begin(); //iniciamos una transaccion
 
-        if ($this->save() && Load::model('roles_usuarios')->asignarRol($this->id, self::ROL_DEFECTO)) {
+        if ($this->save() && Load::model('admin/roles_usuarios')->asignarRol($this->id, self::ROL_DEFECTO)) {
             $hash = sha1($this->login . $this->id . $this->clave);
-            $correo = Load::model('correos');
+            $correo = Load::model('admin/correos');
             if ($correo->enviarRegistro($this, $clave, $hash)) {
                 $this->commit();
                 return TRUE;
@@ -231,7 +231,7 @@ class Usuarios extends ActiveRecord
      */
     public function obtenerPlantilla($roles_id)
     {
-        $res = Load::model('roles')->find_by_sql('select plantilla,MAX(c)
+        $res = Load::model('admin/roles')->find_by_sql('select plantilla,MAX(c)
                 from (select roles_id, count(id) as c
                       from roles_recursos GROUP BY roles_id) as t
                 INNER JOIN roles on roles.id = t.roles_id

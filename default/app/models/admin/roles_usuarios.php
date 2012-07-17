@@ -27,8 +27,8 @@ class RolesUsuarios extends ActiveRecord {
 //    public $debug = true;
 
     protected function initialize() {
-        $this->belongs_to('usuarios');
-        $this->belongs_to('roles');
+        $this->belongs_to('admin/usuarios');
+        $this->belongs_to('admin/roles');
     }
 
     /**

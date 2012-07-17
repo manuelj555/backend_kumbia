@@ -22,7 +22,7 @@
  * @license http://www.gnu.org/licenses/agpl.txt GNU AFFERO GENERAL PUBLIC LICENSE version 3.
  * @author Manuel José Aguirre Garcia <programador.manuel@gmail.com>
  */
-Load::models('menus');
+Load::models('admin/menus');
 
 /**
  * Crea el html para los menus de la app.

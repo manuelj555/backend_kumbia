@@ -27,8 +27,8 @@ class Roles extends ActiveRecord {
 
     protected function initialize() {
         //relaciones
-        $this->has_and_belongs_to_many('recursos', 'model: recursos', 'fk: recursos_id', 'through: roles_recursos', 'key: roles_id');
-        $this->has_and_belongs_to_many('usuarios', 'model: usuarios', 'fk: usuarios_id', 'through: roles_usuarios', 'key: roles_id');
+        $this->has_and_belongs_to_many('recursos', 'model: admin/recursos', 'fk: recursos_id', 'through: admin/roles_recursos', 'key: roles_id');
+        $this->has_and_belongs_to_many('usuarios', 'model: admin/usuarios', 'fk: usuarios_id', 'through: admin/roles_usuarios', 'key: roles_id');
         
         //validaciones
         $this->validates_presence_of('rol','message: Debe escribir el <b>Nombre del Rol</b>');

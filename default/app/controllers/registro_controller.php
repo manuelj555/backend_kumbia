@@ -32,7 +32,7 @@ class RegistroController extends AppController {
 
     public function index() {
         if (Input::hasPost('registro')) {
-            if (Load::model('usuarios', Input::post('registro'))->registrar()){
+            if (Load::model('admin/usuarios', Input::post('registro'))->registrar()){
 				Flash::valid("Exito");
 			}else{
 				Flash::error("Problemas");			
@@ -41,7 +41,7 @@ class RegistroController extends AppController {
     }
 
     public function activar($id_usuario, $hash) {
-        $usuario = Load::model('usuarios');
+        $usuario = Load::model('admin/usuarios');
         if ($usuario->activarCuenta($id_usuario, $hash)) {
             $this->user = $usuario;
         } else {

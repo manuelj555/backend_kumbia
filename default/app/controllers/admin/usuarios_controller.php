@@ -22,7 +22,7 @@
  * @license http://www.gnu.org/licenses/agpl.txt GNU AFFERO GENERAL PUBLIC LICENSE version 3.
  * @author Manuel José Aguirre Garcia <programador.manuel@gmail.com>
  */
-Load::models('usuarios');
+Load::models('admin/usuarios');
 
 class UsuariosController extends AdminController {
 
@@ -76,7 +76,7 @@ class UsuariosController extends AdminController {
         try {
             //obtenemos los usuarios activos para listarlos en el form
             //ya que al crear un user se deben especificar los roles que poseerá
-            $this->roles = Load::model('roles')->find_all_by_activo(1);
+            $this->roles = Load::model('admin/roles')->find_all_by_activo(1);
 
             if (Input::hasPost('usuario')) {
                 //esto es para tener atributos que no son campos de la tabla
@@ -117,7 +117,7 @@ class UsuariosController extends AdminController {
                 $this->rolesUser = $usr->rolesUserIds();
 
                 //obtenemos los roles con los que se crearán los checks.
-                $this->roles = Load::model('roles')->find_all_by_activo(1);
+                $this->roles = Load::model('admin/roles')->find_all_by_activo(1);
 
                 if (Input::hasPost('usuario')) {
 
