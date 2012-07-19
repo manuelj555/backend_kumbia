@@ -22,7 +22,7 @@
  * @license http://www.gnu.org/licenses/agpl.txt GNU AFFERO GENERAL PUBLIC LICENSE version 3.
  * @author Manuel José Aguirre Garcia <programador.manuel@gmail.com>
  */
-Load::models('roles');
+Load::models('admin/roles');
 
 class RolesController extends AdminController {
 

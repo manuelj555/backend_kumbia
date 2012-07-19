@@ -28,9 +28,9 @@ class PrivilegiosController extends AdminController {
 
     public function index($page=1) {
         try {
-            $this->results = Load::model('recursos')->paginate("page: $page", 'order: recurso');
-            $this->roles = Load::model('roles')->find();
-            $this->privilegios = Load::model('roles_recursos')->obtener_privilegios();
+            $this->results = Load::model('admin/recursos')->paginate("page: $page", 'order: recurso');
+            $this->roles = Load::model('admin/roles')->find();
+            $this->privilegios = Load::model('admin/roles_recursos')->obtener_privilegios();
         } catch (KumbiaException $e) {
             View::excepcion($e);
         }
@@ -40,7 +40,7 @@ class PrivilegiosController extends AdminController {
         //por ahora este paso no es auditable :-s
         try {
             if (Input::hasPost('priv') || Input::hasPost('privilegios_pagina')) {
-                $obj = Load::model('roles_recursos');
+                $obj = Load::model('admin/roles_recursos');
                 $datos = Input::post('priv');
                 $priv_pag = Input::post('privilegios_pagina');
                 if ($obj->editarPrivilegios($datos, $priv_pag)) {

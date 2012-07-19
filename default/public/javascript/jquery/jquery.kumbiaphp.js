@@ -14,34 +14,34 @@
  * Plugin para jQuery que incluye los callbacks basicos para los Helpers
  *
  * @copyright  Copyright (c) 2005-2010 Kumbia Team (http://www.kumbiaphp.com)
- * @license	http://wiki.kumbiaphp.com/Licencia	 New BSD License
+ * @license http://wiki.kumbiaphp.com/Licencia   New BSD License
  */
 
 (function($) {
     /**
-	 * Objeto KumbiaPHP
-	 *
-	 */
+     * Objeto KumbiaPHP
+     *
+     */
     $.KumbiaPHP = {
         /**
-		 * Ruta al directorio public en el servidor
-		 *
-		 * @var String
-		 */
+         * Ruta al directorio public en el servidor
+         *
+         * @var String
+         */
         publicPath : null,
 
         /**
-		 * Plugins cargados
-		 *
-		 * @var Array
-		 */
+         * Plugins cargados
+         *
+         * @var Array
+         */
         plugin: [],
 
         /**
-		 * Muestra mensaje de confirmacion
-		 *
-		 * @param Object event
-		 */
+         * Muestra mensaje de confirmacion
+         *
+         * @param Object event
+         */
         cConfirm: function(event) {
             event.preventDefault();
             var este = $(this);
@@ -56,20 +56,26 @@
                 dialogo.append(footer);
                 footer.append('<a class="btn" href="#modal_confirmar" data-toggle="modal">No</a>');
                 footer.append('<a class="respuesta-si btn btn-success">Si</a>');
-                $('.respuesta-si',dialogo).on('click',function(){
+                
+                dialogo.on('hidden', function () {
+                    $('.respuesta-si',dialogo).off();
+                })
+            }
+
+            $('.respuesta-si',dialogo).on('click',function(){
                     dialogo.modal('hide');
                     document.location.href = este.attr('href');
-                });
-            }
+            });
+
             $(".modal-body p" , dialogo).html(este.attr('title'));
             dialogo.modal();
         },
 
         /**
-		 * Aplica un efecto a un elemento
-		 *
-		 * @param String fx
-		 */
+         * Aplica un efecto a un elemento
+         *
+         * @param String fx
+         */
         cFx: function(fx) {
             return function(event) {
                 event.preventDefault();
@@ -78,20 +84,20 @@
         },
 
         /**
-		 * Carga con AJAX
-		 *
-		 * @param Object event
-		 */
+         * Carga con AJAX
+         *
+         * @param Object event
+         */
         cRemote: function(event) {
             event.preventDefault();
             $(this.rel).load(this.href);
         },
 
         /**
-		 * Carga con AJAX y Confirmacion
-		 *
-		 * @param Object event
-		 */
+         * Carga con AJAX y Confirmacion
+         *
+         * @param Object event
+         */
         cRemoteConfirm: function(event) {
             event.preventDefault();
             if(confirm(this.title)) {
@@ -100,9 +106,9 @@
         },
 
         /**
-		 * Enviar formularios de manera asincronica, via POST
-		 * Y los carga en un contenedor
-		 */
+         * Enviar formularios de manera asincronica, via POST
+         * Y los carga en un contenedor
+         */
         cFRemote: function(event){
             event.preventDefault();
             este = $(this);
@@ -120,19 +126,19 @@
         },
 
         /**
-		 * Carga con AJAX al cambiar select
-		 *
-		 * @param Object event
-		 */
+         * Carga con AJAX al cambiar select
+         *
+         * @param Object event
+         */
         cUpdaterSelect: function(event) {
             var este = $(this);
             $('#' + este.attr('data-update')).load(este.attr('data-action') + this.value);
         },
 
         /**
-		 * Carga y Enlaza Unobstrusive DatePicker en caso de ser necesario
-		 *
-		 */
+         * Carga y Enlaza Unobstrusive DatePicker en caso de ser necesario
+         *
+         */
         bindDatePicker: function() {
             var i = document.createElement("input");
             i.setAttribute("type", "date");
@@ -151,9 +157,9 @@
             }
 
             /**
-			 * Funcion encargada de enlazar el DatePicker a los Input
-			 *
-			 */
+             * Funcion encargada de enlazar el DatePicker a los Input
+             *
+             */
             var bindInputs = function() {
                 // Define el formato en función del estándar ISO-8601 el cual es utilizado en HTML 5
                 inputs.each(function() {
@@ -195,9 +201,9 @@
         },
 
         /**
-		 * Enlaza a las clases por defecto
-		 *
-		 */
+         * Enlaza a las clases por defecto
+         *
+         */
         bind : function() {
             // Enlace y boton con confirmacion
             $("a.js-confirm, input.js-confirm").live('click', this.cConfirm);
@@ -261,9 +267,9 @@
         },
 
         /**
-		 * Inicializa el plugin
-		 *
-		 */
+         * Inicializa el plugin
+         *
+         */
         initialize: function() {
             // Obtiene el publicPath, restando los caracteres que sobran
             // de la ruta, respecto a la ruta de ubicacion del plugin de KumbiaPHP

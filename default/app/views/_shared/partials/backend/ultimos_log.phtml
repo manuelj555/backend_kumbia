@@ -1,4 +1,4 @@
-<?php $registros = Load::model('auditorias')
+<?php $registros = Load::model('admin/auditorias')
                 ->find("tabla_afectada = '$tabla'", 'order: id DESC', 'limit: 10'); ?>
 
 <ul>
